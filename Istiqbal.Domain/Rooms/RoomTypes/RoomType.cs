@@ -10,6 +10,8 @@ namespace Istiqbal.Domain.Rooms.RoomTypes
         public string Description { get; private set; } = string.Empty;
         public decimal PricePerNight { get; private set; }
         public short MaxOccupancy { get; private set; }
+        public List<Room> Rooms = new();
+        private IReadOnlyCollection<Room> _rooms => Rooms.AsReadOnly();
         private RoomType() { }
         private RoomType(Guid id, string name, string description, decimal pricePerNight, short maxOccupancy) : base(id)
         {

@@ -10,5 +10,24 @@ namespace Istiqbal.Domain.Guests.Reservations.Payments
     public static class PaymentErrors
     {
          
+        public static Error PaymentIdRequired=> 
+            Error.Validation(
+                code: "Payment.Id.Required",
+                description: "Payment Id is required.");
+
+        public static Error PaymentReservationIdRequired =>
+            Error.Validation(
+                code: "Payment.ReservationId.Required",
+                description: "Payment Reservation Id is required.");
+
+        public static Error PaymentStatusInvalid =>
+            Error.Validation(
+                code: "Payment.Status.Invalid",
+                description: "Payment Status is invalid.");
+
+        public static Error PaymentMethodInvalid =>
+            Error.Validation(
+                code: "Payment.Method.Invalid",
+                description: "Payment Method is invalid."); 
     }
 }

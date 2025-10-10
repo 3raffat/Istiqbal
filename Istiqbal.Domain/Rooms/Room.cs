@@ -1,5 +1,6 @@
 ﻿using Istiqbal.Domain.Common;
 using Istiqbal.Domain.Common.Results;
+using Istiqbal.Domain.Guests.Reservations;
 using Istiqbal.Domain.Rooms.Amenities;
 using Istiqbal.Domain.Rooms.Enums;
 using Istiqbal.Domain.Rooms.RoomTypes;
@@ -11,8 +12,10 @@ namespace Istiqbal.Domain.Rooms
         public int Number { get; private set; }
         public Guid RoomTypeId { get; private set; }
         public RoomType Type { get; private set; } = null!;
-        public int Floor => Number / 100;
+        public int Floor { get;  }
         public RoomStatus Status { get; private set; } = RoomStatus.Available;
+        private readonly List<Reservation> _reservation = new();
+        public IReadOnlyCollection<Reservation> Reservation => _reservation.AsReadOnly();
         private readonly List<Amenity> _amenities = new();
         public IReadOnlyCollection<Amenity> Amenities => _amenities.AsReadOnly();
         private Room() { }

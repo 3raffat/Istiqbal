@@ -18,7 +18,7 @@ namespace Istiqbal.Domain.Guests.Reservations.Feedbacks
         public string? Comments { get; set; } 
 
         private Feedback() { }
-        private Feedback(Guid id,Guid reservationId, short rating, FeedbackType type, string comments):base(id)
+        private Feedback(Guid id,Guid reservationId, short rating, FeedbackType type, string? comments):base(id)
         {
             ReservationId = reservationId;
             Rating = rating;

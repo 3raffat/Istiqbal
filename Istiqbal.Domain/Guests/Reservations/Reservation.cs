@@ -2,6 +2,7 @@
 using Istiqbal.Domain.Common.Results;
 using Istiqbal.Domain.Guests.Reservations.Enums;
 using Istiqbal.Domain.Guests.Reservations.Feedbacks;
+using Istiqbal.Domain.Guests.Reservations.Payments;
 using Istiqbal.Domain.Rooms;
 
 
@@ -18,7 +19,7 @@ namespace Istiqbal.Domain.Guests.Reservations
         public decimal Amount => Room.Type.PricePerNight * (decimal)Math.Max(1, Math.Ceiling((CheckOutDate - CheckInDate).TotalDays));
         public short NumberOfGuests { get; set; }
         public ReservationStatus Status { get; set; } = ReservationStatus.Pending;
-
+        public Payment Payment { get; set; }
         private readonly List<Feedback> _feedbacks = new();
         public IReadOnlyCollection<Feedback> Feedbacks => _feedbacks.AsReadOnly();
         private decimal MaxOccupancy => Room?.Type?.MaxOccupancy ?? 1;

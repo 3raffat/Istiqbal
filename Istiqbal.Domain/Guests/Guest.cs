@@ -1,5 +1,7 @@
 ﻿using Istiqbal.Domain.Common;
 using Istiqbal.Domain.Common.Results;
+using Istiqbal.Domain.Guests.Reservations;
+using Istiqbal.Domain.Rooms.Amenities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,23 +14,24 @@ namespace Istiqbal.Domain.Guests
 {
     public sealed class Guest : AuditableEntity
     {
-        public string Name { get; private set; } = string.Empty;
+        public string FullName { get; private set; } = string.Empty;
         public string Phone { get; private set; } = string.Empty;
         public string Email { get; private set; } = string.Empty;
-
+        private readonly List<Reservation> _reservation = new();
+        public IReadOnlyCollection<Reservation> Reservation => _reservation.AsReadOnly();
         private Guest() { }
-        private Guest(Guid id,string name, string phone, string email) :base(id)
+        private Guest(Guid id,string fullName, string phone, string email) :base(id)
         {
-            Name = name;
             Phone = phone;
             Email = email;
+            FullName = fullName;
         }
-        public static Result<Guest> Create(Guid id,string name, string phone, string email)
+        public static Result<Guest> Create(Guid id,string fullName, string phone, string email)
         {
             if (id == Guid.Empty)
                 return GuestErrors.GuestIdRequired;
 
-            if (string.IsNullOrWhiteSpace(name))         
+            if (string.IsNullOrWhiteSpace(fullName))         
                 return GuestErrors.GuestNameRequired;
 
             if (string.IsNullOrWhiteSpace(phone) || !Regex.IsMatch(phone, @"^\+[1-9]\d{4,14}$"))
@@ -47,11 +50,11 @@ namespace Istiqbal.Domain.Guests
             }
 
 
-            return new Guest(id, name, phone, email);
+            return new Guest(id, fullName, phone, email);
         }
-        public Result<Updated> Update(string name, string phone, string email)
+        public Result<Updated> Update(string fullName, string phone, string email)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(fullName))
                 return GuestErrors.GuestNameRequired;
 
             if (string.IsNullOrWhiteSpace(phone) || !Regex.IsMatch(phone, @"^\+[1-9]\d{4,14}$"))
@@ -68,7 +71,7 @@ namespace Istiqbal.Domain.Guests
                 return GuestErrors.EmailInvalid;
             }
 
-            Name = name;
+            FullName = fullName;
             Phone = phone;
             Email = email;
             return Result.Updated;
