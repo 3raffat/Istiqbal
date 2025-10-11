@@ -9,22 +9,28 @@ using Istiqbal.Domain.Rooms.RoomTypes;
 using Istiqbal.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
-namespace Istiqbal.Infrastructure.Data
+namespace Istiqbal.Infrastructure.Persistence
 {
-    public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<AppUser>(options) ,IAppDbContext
+    public sealed class AppDbContext : IdentityDbContext<AppUser>, IAppDbContext
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
+      
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return await base.SaveChangesAsync(cancellationToken);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
+
         public DbSet<Room> Rooms => Set<Room>();
         public DbSet<RoomType> RoomTypes => Set<RoomType>();
         public DbSet<Feedback> Feedbacks => Set<Feedback>();
@@ -32,7 +38,5 @@ namespace Istiqbal.Infrastructure.Data
         public DbSet<Reservation> Reservations => Set<Reservation>();
         public DbSet<Payment> Payments => Set<Payment>();
         public DbSet<Amenity> Amenities => Set<Amenity>();
-
-
     }
 }

@@ -9,18 +9,18 @@ namespace Istiqbal.Domain.Rooms.RoomTypes
         public string Name { get; private set; } = string.Empty;
         public string Description { get; private set; } = string.Empty;
         public decimal PricePerNight { get; private set; }
-        public short MaxOccupancy { get; private set; }
+        public int MaxOccupancy { get; private set; }
         public List<Room> Rooms = new();
         private IReadOnlyCollection<Room> _rooms => Rooms.AsReadOnly();
         private RoomType() { }
-        private RoomType(Guid id, string name, string description, decimal pricePerNight, short maxOccupancy) : base(id)
+        private RoomType(Guid id, string name, string description, decimal pricePerNight, int maxOccupancy) : base(id)
         {
             Name = name;
             Description = description;
             PricePerNight = pricePerNight;
             MaxOccupancy = maxOccupancy;
         }
-        public static Result<RoomType> Create(Guid id, string name, string description, decimal pricePerNight, short maxOccupancy)
+        public static Result<RoomType> Create(Guid id, string name, string description, decimal pricePerNight, int maxOccupancy)
         {
             if (id == Guid.Empty)
                 return RoomTypeErrors.RoomTypeIdRequerd;
@@ -39,7 +39,7 @@ namespace Istiqbal.Domain.Rooms.RoomTypes
 
             return new RoomType(id, name, description, pricePerNight, maxOccupancy);
         }
-        public Result<Updated> Update( string name, string description, decimal pricePerNight, short maxOccupancy)
+        public Result<Updated> Update( string name, string description, decimal pricePerNight, int maxOccupancy)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return RoomTypeErrors.RoomTypeNameRequerd;

@@ -1,5 +1,10 @@
+using Istiqbal.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddInfrastructure(connectionString!);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
