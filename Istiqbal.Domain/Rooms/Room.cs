@@ -19,12 +19,12 @@ namespace Istiqbal.Domain.Rooms
         private readonly List<Amenity> _amenities = new();
         public IReadOnlyCollection<Amenity> Amenities => _amenities.AsReadOnly();
         private Room() { }
-        private Room(Guid id, Guid roomTypeId, RoomStatus roomStatus) : base(id)
+        private Room(Guid id, Guid roomTypeId,int floor) : base(id)
         {
             RoomTypeId = roomTypeId;
-            Status = roomStatus;
+            Floor = floor;
         }
-        public static Result<Room> Create(Guid id, Guid roomTypeId, RoomStatus roomStatus)
+        public static Result<Room> Create(Guid id, Guid roomTypeId,int floor)
         {
             if (id == Guid.Empty)
                 return RoomErrors.RoomIdRequerd;
@@ -32,10 +32,8 @@ namespace Istiqbal.Domain.Rooms
             if (roomTypeId == Guid.Empty)
                 return RoomErrors.RoomTypeIdRequerd;
 
-            if (!Enum.IsDefined(roomStatus))
-                return RoomErrors.RoomStatusInvalid;
 
-            return new Room(id, roomTypeId, roomStatus);
+            return new Room(id, roomTypeId,floor);
         }
         public Result<Updated> Update(RoomStatus roomStatus)
         {

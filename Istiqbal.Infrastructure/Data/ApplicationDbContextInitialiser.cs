@@ -1,7 +1,6 @@
 ﻿using Istiqbal.Domain.Identity;
 using Istiqbal.Infrastructure.Data;
 using Istiqbal.Infrastructure.Identity;
-using Istiqbal.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -70,6 +69,13 @@ namespace Istiqbal.Infrastructure.Data
             if (_roleManager.Roles.All(r => r.Name != guestRole.Name))
             {
                 await _roleManager.CreateAsync(guestRole);
+            }
+
+            var ReceptionistRole = new IdentityRole(nameof(Role.Receptionist));
+
+            if (_roleManager.Roles.All(r => r.Name != ReceptionistRole.Name))
+            {
+                await _roleManager.CreateAsync(ReceptionistRole);
             }
         }
     }

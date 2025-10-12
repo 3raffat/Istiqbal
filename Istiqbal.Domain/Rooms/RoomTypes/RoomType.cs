@@ -4,7 +4,7 @@ using Istiqbal.Domain.Common.Results;
 
 namespace Istiqbal.Domain.Rooms.RoomTypes
 {
-    public sealed class RoomType :AuditableEntity
+    public  class RoomType :AuditableEntity
     {
         public string Name { get; private set; } = string.Empty;
         public string Description { get; private set; } = string.Empty;

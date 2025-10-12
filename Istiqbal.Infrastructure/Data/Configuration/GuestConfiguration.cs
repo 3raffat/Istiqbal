@@ -12,11 +12,7 @@ namespace Istiqbal.Infrastructure.Data.Configuration
 {
     public sealed class GuestConfiguration : IEntityTypeConfiguration<Guest>
     {
-        public string FullName { get; private set; } = string.Empty;
-        public string Phone { get; private set; } = string.Empty;
-        public string Email { get; private set; } = string.Empty;
-        private readonly List<Reservation> _reservation = new();
-        public IReadOnlyCollection<Reservation> Reservation => _reservation.AsReadOnly();
+ 
         public void Configure(EntityTypeBuilder<Guest> builder)
         {
             builder.HasKey(g => g.Id);

@@ -1,4 +1,6 @@
-﻿using Istiqbal.Domain.Common.Results;
+﻿using Istiqbal.Application.Featuers.Identity.Dtos;
+using Istiqbal.Application.Featuers.Identity.Queries;
+using Istiqbal.Domain.Common.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +12,8 @@ namespace Istiqbal.Application.Common.Interface
 {
     public interface ITokenProvider
     {
-        //Task<Result<TokenResponse>> GenerateJwtTokenAsync(AppUserDto user, CancellationToken ct = default);
+        Task<Result<TokenResponse>> GenerateJwtTokenAsync(AppUserDto user, CancellationToken ct = default);
 
-        //ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);
+       
     }
 }

@@ -34,7 +34,7 @@ namespace Istiqbal.Infrastructure.Data.Configuration
                 .IsRequired();
 
             builder.Property(r => r.Floor)
-                .HasComputedColumnSql("[Number] % 100");
+                .IsRequired();
 
             builder.HasMany(r => r.Reservation)
                 .WithOne(res => res.Room)

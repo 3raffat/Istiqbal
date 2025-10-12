@@ -2,15 +2,12 @@
 using Istiqbal.Domain.Guests.Reservations;
 using Istiqbal.Domain.Guests.Reservations.Feedbacks;
 using Istiqbal.Domain.Guests.Reservations.Payments;
+using Istiqbal.Domain.Identity;
 using Istiqbal.Domain.Rooms;
 using Istiqbal.Domain.Rooms.Amenities;
 using Istiqbal.Domain.Rooms.RoomTypes;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Istiqbal.Application.Common.Interface
 {
@@ -23,7 +20,7 @@ namespace Istiqbal.Application.Common.Interface
         public DbSet<Reservation> Reservations { get; }
         public DbSet<Payment> Payments { get; }
         public DbSet<Amenity> Amenities { get; }
-
+        public DbSet<RefreshToken> RefreshTokens { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
     }

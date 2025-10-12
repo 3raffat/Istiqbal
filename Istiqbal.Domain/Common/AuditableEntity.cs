@@ -23,5 +23,9 @@ namespace Istiqbal.Domain.Common
         public DateTimeOffset LastModifiedUtc { get; set; }
 
         public string? LastModifiedBy { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
+        public DateTimeOffset? DeletedUtc { get; set; }
+        public string? DeletedBy { get; set; }
     }
 }

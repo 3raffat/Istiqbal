@@ -1,10 +1,11 @@
 using Istiqbal.Infrastructure;
-
+using Istiqbal.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddInfrastructure(connectionString!);
+builder.Services.AddInfrastructure(builder.Configuration);
+
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -14,6 +15,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+   await app.InitialiseDatabaseAsync();
 }
 
 app.UseHttpsRedirection();

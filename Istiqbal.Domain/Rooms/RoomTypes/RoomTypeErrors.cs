@@ -33,5 +33,15 @@ namespace Istiqbal.Domain.Rooms.RoomTypes
             code: "RoomType.RoomTypeId.NotFound",
             description: "Room type with the specified ID was not found."
         );
+
+        public static Error RoomTypeNameAlreadyExists => Error.Conflict(
+            code: "RoomType.RoomTypeName.AlreadyExists",
+            description: "A room type with the specified name already exists."
+        );
+
+        public static Error RoomTypeNotFound => Error.NotFound(
+            code: "RoomType.NotFound",
+            description: "Room type not found."
+        );
     }
 }

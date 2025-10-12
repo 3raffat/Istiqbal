@@ -20,9 +20,6 @@ namespace Istiqbal.Infrastructure.Data.Configuration
                 .IsRequired()
                 .HasConversion<string>();
 
-            //builder.Property(p => p.Amount)
-            //   .HasComputedColumnSql("(SELECT Amount FROM Reservations WHERE Id = ReservationId)");
-
             builder.HasOne(p => p.Reservation)
                  .WithOne(p => p.Payment)
                  .HasForeignKey<Payment>(p=>p.ReservationId);

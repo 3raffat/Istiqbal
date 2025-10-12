@@ -3,11 +3,7 @@ using Istiqbal.Domain.Common.Results.Abstraction;
 using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Istiqbal.Application.Common.Behaviors
 {
