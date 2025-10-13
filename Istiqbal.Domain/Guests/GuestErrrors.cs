@@ -38,5 +38,19 @@ namespace Istiqbal.Domain.Guests
             description: "Guest phone number is invalid. It should be in the format +1234567890."
         );
 
+        public static Error GuestNameAlreadyExists => Error.Conflict(
+            code: "Guest.GuestName.AlreadyExists",
+            description: "Guest with the same name already exists."
+        );
+
+        public static Error GuestPhoneAlreadyExists => Error.Conflict(
+            code: "Guest.GuestPhone.AlreadyExists",
+            description: "Guest with the same phone number already exists."
+        );
+
+        public static Error GuestEmailAlreadyExists => Error.Conflict(
+            code: "Guest.GuestEmail.AlreadyExists",
+            description: "Guest with the same email already exists."
+        );
     }
 }

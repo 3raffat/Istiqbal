@@ -1,10 +1,13 @@
+using Istiqbal.Application;
 using Istiqbal.Infrastructure;
 using Istiqbal.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services
+    .AddInfrastructure(builder.Configuration)
+    .AddApplication();
 
 
 builder.Services.AddControllers();

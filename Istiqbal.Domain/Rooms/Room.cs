@@ -16,15 +16,16 @@ namespace Istiqbal.Domain.Rooms
         public RoomStatus Status { get; private set; } = RoomStatus.Available;
         private readonly List<Reservation> _reservation = new();
         public IReadOnlyCollection<Reservation> Reservation => _reservation.AsReadOnly();
-        private readonly List<Amenity> _amenities = new();
+        private List<Amenity> _amenities = new();
         public IReadOnlyCollection<Amenity> Amenities => _amenities.AsReadOnly();
         private Room() { }
-        private Room(Guid id, Guid roomTypeId,int floor) : base(id)
+        private Room(Guid id, Guid roomTypeId,int floor, List<Amenity> amenities) : base(id)
         {
             RoomTypeId = roomTypeId;
             Floor = floor;
+            _amenities = amenities;
         }
-        public static Result<Room> Create(Guid id, Guid roomTypeId,int floor)
+        public static Result<Room> Create(Guid id, Guid roomTypeId,int floor, List<Amenity> amenities)
         {
             if (id == Guid.Empty)
                 return RoomErrors.RoomIdRequerd;
@@ -33,37 +34,54 @@ namespace Istiqbal.Domain.Rooms
                 return RoomErrors.RoomTypeIdRequerd;
 
 
-            return new Room(id, roomTypeId,floor);
+            return new Room(id, roomTypeId, GetFloorNumber(floor), amenities);
         }
-        public Result<Updated> Update(RoomStatus roomStatus)
+        public Result<Updated> Update(RoomStatus roomStatus, Guid roomTypeId)
         {
+
+            if (roomTypeId == Guid.Empty)
+                return RoomErrors.RoomTypeIdRequerd;
+
             if (!Enum.IsDefined(roomStatus))
                 return RoomErrors.RoomStatusInvalid;
 
             Status = roomStatus;
+            RoomTypeId = roomTypeId;
             return Result.Updated;
         }
-        public Result<Updated> AddAmenities(Amenity amenity)
+        public Result<Updated> AddAmenities(List<Amenity> amenities)
         {
-            if (amenity == null)
-                return RoomErrors.RoomAmenitiesRequerd;
+            _amenities.RemoveAll(exist => amenities.All(x=>x.Id != exist.Id)); 
 
-            if (_amenities.Contains(amenity))
-                return RoomErrors.RoomAmenityIsExist;
+            foreach (var amenity in amenities)
+            {
+               var exist = _amenities.FirstOrDefault(x => x.Id == amenity.Id);
+                if (exist is null)
+                {
+                    _amenities.Add(amenity);
+                }
+                else
+                {
+                    var result = exist.Update(amenity.Name);
 
-            _amenities.Add(amenity);
+                    if (result.IsError)
+                        return result.Errors;
+                }
+
+            }
             return Result.Updated;
         }
-        public Result<Deleted> RemoveAmenities(Amenity amenity)
+        private static int GetFloorNumber(int? lastRoomNumber, int baseFloor = 1, int roomsPerFloor = 10)
         {
-            if (amenity == null)
-                return RoomErrors.RoomAmenitiesRequerd;
+            if (lastRoomNumber is null)
+                return baseFloor * 100; 
 
-            if (!_amenities.Contains(amenity))
-                return RoomErrors.RoomAmenityNotFound;
+            int nextNumber = lastRoomNumber.Value + 1;
 
-            _amenities.Remove(amenity);
-            return Result.Deleted;
-        }
+            if (nextNumber % 100 > roomsPerFloor)
+                nextNumber = ((nextNumber / 100) + 1) * 100;
+
+            return nextNumber;
+        }   
     }
 }

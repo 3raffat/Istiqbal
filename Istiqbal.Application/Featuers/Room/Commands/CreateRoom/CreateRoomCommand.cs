@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 
 namespace Istiqbal.Application.Featuers.Room.Commands.CreateRoom
 {
-    public sealed record CreateRoomCommand(Guid roomTypeId):IRequest<Result<RoomDto>>;
+    public sealed record CreateRoomCommand(Guid roomTypeId,List<CreateAmenityCommand> Amenities):IRequest<Result<RoomDto>>;
 
-    
-   
 }

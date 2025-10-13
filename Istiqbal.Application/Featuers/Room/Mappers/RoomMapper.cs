@@ -20,7 +20,7 @@ namespace Istiqbal.Application.Featuers.Room.Mappers
                 room.Type.Name,
                 room.Floor,
                 room.Status.ToString(),
-                room.Amenities.Select(a => a.Name).ToList()
+                room.Amenities.ToList()
             );
         }
         public static List<RoomDto> ToDtos(this IEnumerable<Domain.Rooms.Room> rooms)

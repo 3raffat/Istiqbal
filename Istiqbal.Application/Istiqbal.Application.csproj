@@ -16,13 +16,4 @@
     <ProjectReference Include="..\Istiqbal.Domain\Istiqbal.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Featuers\Amenity\Dtos\" />
-    <Folder Include="Featuers\Amenity\Commands\" />
-    <Folder Include="Featuers\Amenity\Mappers\" />
-    <Folder Include="Featuers\Amenity\Queries\" />
-    <Folder Include="Featuers\Room\Commands\DeleteRoom\" />
-    <Folder Include="Featuers\Room\Commands\UpdateRoom\" />
-  </ItemGroup>
-
 </Project>
