@@ -1,3 +1,4 @@
+using Istiqbal.Api;
 using Istiqbal.Application;
 using Istiqbal.Infrastructure;
 using Istiqbal.Infrastructure.Data;
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services
+    .AddPresentation()
     .AddInfrastructure(builder.Configuration)
     .AddApplication();
 
@@ -19,7 +21,15 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 
-   await app.InitialiseDatabaseAsync();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "Istiqbal API V1");
+
+        options.EnableDeepLinking();
+        options.DisplayRequestDuration();
+        options.EnableFilter();
+    });
+    await app.InitialiseDatabaseAsync();
 }
 
 app.UseHttpsRedirection();

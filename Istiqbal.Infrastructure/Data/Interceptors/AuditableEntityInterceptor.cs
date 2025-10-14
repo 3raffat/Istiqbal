@@ -59,9 +59,7 @@ namespace Istiqbal.Infrastructure.Data.Interceptors
                     if (entry.State == EntityState.Deleted)
                     {
                         entry.State = EntityState.Modified;
-                        entry.Entity.IsDeleted = true;
-                        entry.Entity.DeletedUtc = utcNow;
-                        entry.Entity.DeletedBy = _user.Id;
+                        entry.Entity.SoftDelete(_user.Id);
                     }
                 }
             }

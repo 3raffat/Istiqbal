@@ -1,5 +1,5 @@
 ﻿using Istiqbal.Application.Common.Interface;
-using Istiqbal.Application.Featuers.Identity.Dtos;
+using Istiqbal.Application.Featuers.Auth.Dtos;
 using Istiqbal.Application.Featuers.Identity.Queries;
 using Istiqbal.Domain.Common.Results;
 using Istiqbal.Domain.Common.Results.Abstraction;
@@ -20,14 +20,11 @@ namespace Istiqbal.Infrastructure.Identity
 {
     public sealed class TokenProvider(IConfiguration _configuration ,IAppDbContext _context) : ITokenProvider
     {
-        public async Task<Result<TokenResponse>> GenerateJwtTokenAsync(AppUserDto user, CancellationToken ct = default)
+        public async Task<TokenResponse> GenerateJwtTokenAsync(AppUserDto user, CancellationToken ct = default)
         {
             var tokenResult = await GenerateJwt(user, ct);
 
-            if (tokenResult.IsError)
-            {
-                return tokenResult.Errors;
-            }
+           
             return tokenResult.Value;
         }
         private async Task<Result<TokenResponse>> GenerateJwt(AppUserDto user, CancellationToken ct = default)

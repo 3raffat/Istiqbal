@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 
 namespace Istiqbal.Application.Common.Behaviors
 {
-    public sealed class ValidationBehavior<TRequest, TResponse>(IValidator<TRequest>? validator) :IPipelineBehavior<TRequest, TResponse>
+    public sealed class ValidationBehavior
+        <TRequest, TResponse>(IValidator<TRequest>? validator=null)
+        :IPipelineBehavior<TRequest, TResponse>
         where TRequest : notnull
     {
         private readonly IValidator<TRequest>? _validator = validator;

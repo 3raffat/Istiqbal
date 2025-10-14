@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace Istiqbal.Application.Featuers.RoomTypes.Commands.DeleteRoomType
 {
     public sealed class DeleteRoomTypeCommandHandler
-           (IAppDbContext _context, ILogger<UpdateRoomTypeCommandHandler> _logger, HybridCache _cache)
+           (IAppDbContext _context, ILogger<DeleteRoomTypeCommandHandler> _logger, HybridCache _cache)
         : IRequestHandler<DeleteRoomTypeCommand, Result<Deleted>>
     {
         public async Task<Result<Deleted>> Handle(DeleteRoomTypeCommand request, CancellationToken cancellationToken)
@@ -26,7 +26,8 @@ namespace Istiqbal.Application.Featuers.RoomTypes.Commands.DeleteRoomType
                 return ApplicationErrors.RoomTypeNotFound;
             }
 
-             _context.RoomTypes.Remove(roomType);
+     
+            _context.RoomTypes.Remove(roomType);
 
             await _context.SaveChangesAsync(cancellationToken);
 

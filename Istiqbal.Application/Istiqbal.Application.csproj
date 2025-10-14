@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Istiqbal.Domain\Istiqbal.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Featuers\Auth\Queries\" />
+  </ItemGroup>
+
 </Project>

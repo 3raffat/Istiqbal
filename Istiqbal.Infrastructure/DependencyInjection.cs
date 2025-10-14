@@ -1,4 +1,5 @@
 ﻿using Istiqbal.Application.Common.Interface;
+using Istiqbal.Infrastructure.Auth;
 using Istiqbal.Infrastructure.Data;
 using Istiqbal.Infrastructure.Data.Interceptors;
 using Istiqbal.Infrastructure.Identity;
@@ -24,12 +25,12 @@ namespace Istiqbal.Infrastructure
             {
                 _options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
                 _options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            });
-
-
-            services.AddIdentityCore<AppUser>()
+            }).AddIdentityCore<AppUser>()
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<AppDbContext>();
+                .AddEntityFrameworkStores<AppDbContext>();;
+
+
+         
 
             services.AddAuthentication(_options =>
             {
@@ -65,6 +66,8 @@ namespace Istiqbal.Infrastructure
 
 
             services.AddScoped<ITokenProvider, TokenProvider>();
+
+            services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
 

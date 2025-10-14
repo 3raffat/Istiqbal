@@ -27,5 +27,12 @@ namespace Istiqbal.Domain.Common
         public bool IsDeleted { get; set; } = false;
         public DateTimeOffset? DeletedUtc { get; set; }
         public string? DeletedBy { get; set; }
+
+        public void SoftDelete(string userId)
+        {
+            IsDeleted = true;
+            DeletedUtc = DateTime.UtcNow;
+            DeletedBy = userId;
+        }
     }
 }
