@@ -1,9 +1,10 @@
 ﻿
+
 using Istiqbal.Application.Common.Interface;
-using Istiqbal.Application.Featuers.RoomTypes.Dtos;
-using Istiqbal.Application.Featuers.RoomTypes.Mappers;
+using Istiqbal.Application.Featuers.RoomType.Dtos;
+using Istiqbal.Application.Featuers.RoomType.Mappers;
 using Istiqbal.Domain.Common.Results;
-using Istiqbal.Domain.Rooms.RoomTypes;
+using Istiqbal.Domain.RoomTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
@@ -28,7 +29,7 @@ namespace Istiqbal.Application.Featuers.RoomTypes.Commands.CreateRoomType
 
                 return RoomTypeErrors.RoomTypeNameAlreadyExists;
             }
-            var roomTypeResult = RoomType
+            var roomTypeResult = Istiqbal.Domain.RoomTypes.RoomType
                 .Create(Guid.NewGuid(),
                 request.Name.Trim(),
                 request.Description.Trim(),

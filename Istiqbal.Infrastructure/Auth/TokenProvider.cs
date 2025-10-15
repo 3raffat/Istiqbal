@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Istiqbal.Infrastructure.Identity
+namespace Istiqbal.Infrastructure.Auth
 {
     public sealed class TokenProvider(IConfiguration _configuration ,IAppDbContext _context) : ITokenProvider
     {

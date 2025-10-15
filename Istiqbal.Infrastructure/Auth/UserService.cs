@@ -2,7 +2,6 @@
 using Istiqbal.Application.Featuers.Auth.Dtos;
 using Istiqbal.Domain.Auth;
 using Istiqbal.Domain.Common.Results;
-using Istiqbal.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

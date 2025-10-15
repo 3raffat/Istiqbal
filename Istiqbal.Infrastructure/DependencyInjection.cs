@@ -2,7 +2,6 @@
 using Istiqbal.Infrastructure.Auth;
 using Istiqbal.Infrastructure.Data;
 using Istiqbal.Infrastructure.Data.Interceptors;
-using Istiqbal.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +26,7 @@ namespace Istiqbal.Infrastructure
                 _options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             }).AddIdentityCore<AppUser>()
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<AppDbContext>();;
+                .AddEntityFrameworkStores<AppDbContext>();
 
 
          
@@ -70,6 +69,8 @@ namespace Istiqbal.Infrastructure
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
+
+            services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
 
             return services;
         }

@@ -1,5 +1,5 @@
 ﻿using Istiqbal.Domain.Common;
-using Istiqbal.Domain.Rooms;
+using Istiqbal.Domain.RoomTypes.Rooms;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

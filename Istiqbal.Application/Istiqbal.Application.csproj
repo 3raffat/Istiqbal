@@ -13,12 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Istiqbal.Contracts\Istiqbal.Contracts.csproj" />
     <ProjectReference Include="..\Istiqbal.Domain\Istiqbal.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Featuers\Amenities\Commands\DeleteAmenity\" />
-    <Folder Include="Featuers\Amenities\Queries\" />
     <Folder Include="Featuers\Auth\Queries\" />
   </ItemGroup>
 

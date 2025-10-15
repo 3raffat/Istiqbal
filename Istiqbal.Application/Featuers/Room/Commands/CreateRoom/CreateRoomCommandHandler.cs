@@ -1,12 +1,14 @@
-﻿using Istiqbal.Application.Common.Errors;
+﻿
+
+using Istiqbal.Application.Common.Errors;
 using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Room.Dtos;
+using Istiqbal.Application.Featuers.Room.Mappers;
 using Istiqbal.Domain.Common.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
-
 
 namespace Istiqbal.Application.Featuers.Room.Commands.CreateRoom
 {
@@ -31,35 +33,36 @@ namespace Istiqbal.Application.Featuers.Room.Commands.CreateRoom
                 .OrderByDescending(x => x.Number)
                 .FirstOrDefaultAsync(cancellationToken);
 
-            var lastRoomNumber = lastRoom!.Number;
+            var lastRoomNumber  = lastRoom?.Number  ?? 99;
 
-            List<Amenity> amenities = new();
+            List<Domain.Amenities.Amenity> amenities = new();
 
-            foreach (var amenity in request.Amenities)
+
+
+            foreach (var amenityId in request.AmenitiesIds)
             {
-                var amenityResult = Amenity.Create(Guid.NewGuid(), amenity.name);
+                var existAmenity = await _context.Amenities.FirstOrDefaultAsync(x=>x.Id == amenityId, cancellationToken);
 
-                if (amenityResult.IsError)
+                if (existAmenity is null)
                 {
-                    _logger.LogWarning("Invalid Amenity Data , Name: {Name}", amenity.name);
+                    _logger.LogWarning("Amenity with ID {Id} not found ", amenityId);
 
-                    return amenityResult.Errors;
                 }
 
-                amenities.Add(amenityResult.Value);
+                amenities.Add(existAmenity!);
             }
 
-            var roomResult = Istiqbal.Domain.Rooms.
+            var roomResult = Domain.RoomTypes.Rooms.
                 Room.Create(Guid.NewGuid(), request.roomTypeId, lastRoomNumber, amenities);
 
             if (roomResult.IsError)
                 return roomResult.Errors;
 
-            await _context.Rooms.AddAsync(roomResult.Value, cancellationToken);
+            var room = roomResult.Value;
+
+            await _context.Rooms.AddAsync(room, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
-
-            var room = roomResult.Value;
 
             _logger.LogInformation("Room Created Successfully , RoomId: {RoomId}", room.Id);
 

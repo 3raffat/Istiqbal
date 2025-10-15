@@ -3,7 +3,6 @@ using Istiqbal.Application.Featuers.RoomTypes.Commands.DeleteRoomType;
 using Istiqbal.Application.Featuers.RoomTypes.Commands.UpdateRoomType;
 using Istiqbal.Application.Featuers.RoomTypes.Queries;
 using Istiqbal.Contracts.Requests.RoomTypes;
-using Istiqbal.Domain.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

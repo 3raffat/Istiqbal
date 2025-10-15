@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Istiqbal.Contracts\Istiqbal.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

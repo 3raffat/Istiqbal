@@ -29,5 +29,9 @@ namespace Istiqbal.Domain.Amenities
             code: "Amenity.AlreadyExists",
             description: "An amenity with the same name already exists."
         );
+        public static Error AmenityNotExists => Error.Conflict(
+           code: "Amenity.NotExists",
+           description: "An amenity with the same name already exists."
+       );
     }
 }

@@ -5,7 +5,7 @@ namespace Istiqbal.Contracts.Requests.Rooms
     {
       
         public Guid roomTypeId { get; set; }
-        public List<CreateAmenityRequest> Amenities { get; set; }
+        public List<Guid> AmenitiesIds { get; set; }
     }
 
 }

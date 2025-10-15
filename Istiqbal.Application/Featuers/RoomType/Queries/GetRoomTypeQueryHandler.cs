@@ -1,6 +1,6 @@
 ﻿using Istiqbal.Application.Common.Interface;
-using Istiqbal.Application.Featuers.RoomTypes.Dtos;
-using Istiqbal.Application.Featuers.RoomTypes.Mappers;
+using Istiqbal.Application.Featuers.RoomType.Dtos;
+using Istiqbal.Application.Featuers.RoomType.Mappers;
 using Istiqbal.Domain.Common.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

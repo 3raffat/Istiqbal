@@ -1,10 +1,13 @@
 ﻿using Azure.Core;
+using Istiqbal.Api.Extension;
 using Istiqbal.Application.Featuers.Guest.Commands.CreateGuest;
 using Istiqbal.Application.Featuers.Guest.Commands.DeleteGuest;
 using Istiqbal.Application.Featuers.Guest.Commands.UpdateGuest;
 using Istiqbal.Application.Featuers.Guest.Queries;
 using Istiqbal.Contracts.Requests.Guests;
-using Istiqbal.Domain.Identity;
+using Istiqbal.Contracts.Responses;
+using Istiqbal.Domain.Auth;
+using Istiqbal.Domain.Common.Results;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,18 +20,16 @@ namespace Istiqbal.Api.Controllers
     public sealed class GuestController(ISender _sender) :ApiController
     {
         [HttpGet]
-      //  [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
+        [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
         public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
             var result = await _sender.Send(new GetGuestQuery(), cancellationToken);
 
-            return result.Match(
-            response => Ok(response),
-            Problem);
+            return result.ToActionResult(this, "Guestes retrieved successfully");
         }
 
-        [HttpPost]
-      //  [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
+       [HttpPost]
+       [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
         public async Task<IActionResult> Create(CreateGuestRequest request , CancellationToken cancellationToken)
         {
             var result = await _sender.Send(
@@ -38,13 +39,18 @@ namespace Istiqbal.Api.Controllers
                     , request.email)
                 , cancellationToken);
 
-            return result.Match(
-            response => Ok(response),
-            Problem);
+            return result.ToActionResult(
+            this,
+            "Guest created successfully",
+            Guest => CreatedAtAction(
+                nameof(Create),
+                new { id = Guest.Id },
+                result.ToApiResponse("Guest created successfully")
+            ));
         }
 
         [HttpPut("{id:guid}")]
-      //  [Authorize(Roles = nameof(Role.Admin))]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> Update(Guid id,UpdateGuestRequest request, CancellationToken cancellationToken)
         {
             var result = await _sender.Send(
@@ -55,22 +61,30 @@ namespace Istiqbal.Api.Controllers
                     , request.email)
                 , cancellationToken);
 
-            return result.Match(
-            response => Ok(response),
-            Problem);
+            return result.ToActionResult(this, "Guest updated successfully");
+
         }
 
         [HttpDelete("{id:guid}")]
-      //  [Authorize(Roles = nameof(Role.Admin))]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
             var result = await _sender.Send(
                 new DeleteGuestCommand(id)
                 , cancellationToken);
 
-            return result.Match(
-            response => Ok(response),
-            Problem);
+
+            if (result.IsSuccess)
+            {
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Guest deleted successfully",
+                    Timestamp = DateTime.UtcNow
+                });
+            }
+
+            return result.ToErrorActionResult<Deleted>(this);
         }
 
     }

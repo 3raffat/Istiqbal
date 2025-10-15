@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Istiqbal.Application.Featuers.Room.Commands.UpdateRoom
+namespace Istiqbal.Application.Featuers.Amenities.Commands.DeleteAmenity
 {
-    public sealed record  UpdateAmenityCommand (Guid id, string name) : IRequest<Result<Updated>>;
-    
+    public sealed record DeleteAmenityCommand(Guid id):IRequest<Result<Deleted>>;
+   
 }

@@ -44,7 +44,7 @@ namespace Istiqbal.Application.Featuers.Amenity.Commands.CreateAmenity
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            await _cache.RemoveByTagAsync("amenity");
+            await _cache.RemoveByTagAsync("amenity",cancellationToken);
 
             _logger.LogInformation("Amenity created successfully: {AmenityName}", amenity.Name);
 

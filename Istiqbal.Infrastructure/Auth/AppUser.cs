@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Istiqbal.Infrastructure.Identity
+namespace Istiqbal.Infrastructure.Auth
 {
     public class AppUser : IdentityUser
     {

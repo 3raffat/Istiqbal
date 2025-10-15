@@ -4,10 +4,8 @@ using Istiqbal.Domain.Guestes;
 using Istiqbal.Domain.Guestes.Reservations;
 using Istiqbal.Domain.Guestes.Reservations.Feedbacks;
 using Istiqbal.Domain.Guestes.Reservations.Payments;
-using Istiqbal.Domain.Rooms;
-using Istiqbal.Domain.Rooms.RoomTypes;
-using Istiqbal.Domain.RoomType;
-using Istiqbal.Domain.RoomType.Room;
+using Istiqbal.Domain.RoomTypes;
+using Istiqbal.Domain.RoomTypes.Rooms;
 using Microsoft.EntityFrameworkCore;
 
 

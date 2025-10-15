@@ -1,6 +1,6 @@
 ﻿using Istiqbal.Domain.Auth;
+using Istiqbal.Infrastructure.Auth;
 using Istiqbal.Infrastructure.Data;
-using Istiqbal.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

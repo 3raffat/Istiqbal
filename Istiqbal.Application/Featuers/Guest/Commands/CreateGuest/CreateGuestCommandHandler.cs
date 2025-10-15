@@ -1,7 +1,6 @@
 ﻿using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Guest.Dtos;
 using Istiqbal.Application.Featuers.Guest.Mapper;
-using Istiqbal.Application.Featuers.RoomTypes.Commands.CreateRoomType;
 using Istiqbal.Domain.Common.Results;
 using Istiqbal.Domain.Guestes;
 using MediatR;

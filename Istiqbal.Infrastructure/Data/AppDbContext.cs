@@ -6,20 +6,12 @@ using Istiqbal.Domain.Guestes;
 using Istiqbal.Domain.Guestes.Reservations;
 using Istiqbal.Domain.Guestes.Reservations.Feedbacks;
 using Istiqbal.Domain.Guestes.Reservations.Payments;
-using Istiqbal.Domain.Rooms;
-using Istiqbal.Domain.Rooms.RoomTypes;
-using Istiqbal.Domain.RoomType;
-using Istiqbal.Domain.RoomType.Room;
-using Istiqbal.Infrastructure.Identity;
-using MediatR;
+using Istiqbal.Domain.RoomTypes;
+using Istiqbal.Domain.RoomTypes.Rooms;
+using Istiqbal.Infrastructure.Auth;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Istiqbal.Infrastructure.Data
 {

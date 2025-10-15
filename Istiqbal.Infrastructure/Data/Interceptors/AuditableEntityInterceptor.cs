@@ -3,15 +3,17 @@ using Istiqbal.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 using System;
 
 
 namespace Istiqbal.Infrastructure.Data.Interceptors
 {
-    public sealed class AuditableEntityInterceptor(IUser user, TimeProvider timeProvider) : SaveChangesInterceptor
+    public sealed class AuditableEntityInterceptor(IUser user, TimeProvider timeProvider,ILogger<AuditableEntityInterceptor> _logger) : SaveChangesInterceptor
     {
         private readonly IUser _user = user;
         private readonly TimeProvider _timeProvider = timeProvider;
+        
         public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
         {
             UpdateEntities(eventData.Context);
@@ -25,7 +27,7 @@ namespace Istiqbal.Infrastructure.Data.Interceptors
         public void UpdateEntities(DbContext? context)
         {
             if(context is null) return;
-
+            _logger.LogInformation("user id {userid}",_user.Id);
             foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
             {
                 if(entry.State is EntityState.Added or EntityState.Modified || entry.HasChangedOwnedEntities())
@@ -54,12 +56,6 @@ namespace Istiqbal.Infrastructure.Data.Interceptors
                             ownedEntity.LastModifiedBy = _user.Id;
                             ownedEntity.LastModifiedUtc = utcNow;
                         }
-                    }
-
-                    if (entry.State == EntityState.Deleted)
-                    {
-                        entry.State = EntityState.Modified;
-                        entry.Entity.SoftDelete(_user.Id);
                     }
                 }
             }

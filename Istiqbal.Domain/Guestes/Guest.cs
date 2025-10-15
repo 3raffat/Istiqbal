@@ -1,5 +1,6 @@
 ﻿using Istiqbal.Domain.Common;
 using Istiqbal.Domain.Common.Results;
+using Istiqbal.Domain.Common.Results.Abstraction;
 using Istiqbal.Domain.Guestes.Reservations;
 using System.Net.Mail;
 using System.Text.RegularExpressions;

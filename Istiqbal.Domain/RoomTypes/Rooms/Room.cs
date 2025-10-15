@@ -1,8 +1,8 @@
-﻿using Istiqbal.Domain.Amenities;
+﻿using Istiqbal.Contracts.Requests.Rooms;
+using Istiqbal.Domain.Amenities;
 using Istiqbal.Domain.Common;
 using Istiqbal.Domain.Common.Results;
 using Istiqbal.Domain.Guestes.Reservations;
-using Istiqbal.Domain.RoomTypes.Enums;
 
 namespace Istiqbal.Domain.RoomTypes.Rooms
 {
@@ -35,7 +35,7 @@ namespace Istiqbal.Domain.RoomTypes.Rooms
 
             return new Room(id, roomTypeId, GetFloorNumber(floor), amenities);
         }
-        public Result<Updated> Update(RoomStatus roomStatus, Guid roomTypeId)
+        public Result<Updated> Update(RoomStatus roomStatus, Guid roomTypeId, List<Amenity> amenities)
         {
 
             if (roomTypeId == Guid.Empty)
@@ -46,6 +46,7 @@ namespace Istiqbal.Domain.RoomTypes.Rooms
 
             Status = roomStatus;
             RoomTypeId = roomTypeId;
+            _amenities = amenities;
             return Result.Updated;
         }
         public Result<Updated> AddAmenities(List<Amenity> amenities)
@@ -70,17 +71,14 @@ namespace Istiqbal.Domain.RoomTypes.Rooms
             }
             return Result.Updated;
         }
-        private static int GetFloorNumber(int? lastRoomNumber, int baseFloor = 1, int roomsPerFloor = 10)
+        private static int GetFloorNumber(int lastRoomNumber,int roomPerFloor = 10)
         {
-            if (lastRoomNumber is null)
-                return baseFloor * 100; 
+         
 
-            int nextNumber = lastRoomNumber.Value + 1;
+            int floorNumber = ((lastRoomNumber-100)/roomPerFloor) +1;
 
-            if (nextNumber % 100 > roomsPerFloor)
-                nextNumber = ((nextNumber / 100) + 1) * 100;
 
-            return nextNumber;
+            return floorNumber;
         }   
     }
 }

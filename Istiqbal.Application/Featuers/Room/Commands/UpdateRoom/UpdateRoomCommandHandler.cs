@@ -2,16 +2,11 @@
 using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Room.Commands.DeleteRoom;
 using Istiqbal.Domain.Common.Results;
-using Istiqbal.Domain.Rooms.Amenities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Istiqbal.Application.Featuers.Room.Commands.UpdateRoom
 {
@@ -41,28 +36,26 @@ namespace Istiqbal.Application.Featuers.Room.Commands.UpdateRoom
                 return ApplicationErrors.RoomTypeNotFound;
             }
 
-            var roomResult = room.Update(request.roomStatus,request.roomTypeId);
+            List<Domain.Amenities.Amenity> amenities = new();
 
-            if(roomResult.IsError)
+            foreach (var amenityId in request.amenitiesId)
+            {
+                var existAmenity = await _context.Amenities.FirstOrDefaultAsync(x => x.Id == amenityId, cancellationToken);
+
+                if (existAmenity is null)
+                {
+                    _logger.LogWarning("Amenity with ID {Id} not found ", amenityId);
+
+                }
+
+                amenities.Add(existAmenity!);
+            }
+
+            var roomResult = room.Update(request.roomStatus, request.roomTypeId,amenities);
+
+            if (roomResult.IsError)
                 return roomResult.Errors;
 
-            //List<Amenity> amenities = new();
-
-            //foreach (var amenity in request.amenities)
-            //{
-            //    var amenityResult = Istiqbal.Domain.Rooms.Amenities.Amenity
-            //        .Create(amenity.id,amenity.name.Trim());
-
-            //    if (amenityResult.IsError)
-            //        return amenityResult.Errors;
-
-            //    amenities.Add(amenityResult.Value);
-            //}
-
-            //var amenitiesResult = room.AddAmenities(amenities);
-
-            //if (amenitiesResult.IsError)
-            //    return amenitiesResult.Errors;
 
             await _context.SaveChangesAsync(cancellationToken);
 

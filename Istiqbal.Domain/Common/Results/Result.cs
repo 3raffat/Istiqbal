@@ -1,4 +1,6 @@
 ﻿using Istiqbal.Domain.Common.Results.Abstraction;
+using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 
 namespace Istiqbal.Domain.Common.Results
@@ -48,6 +50,32 @@ namespace Istiqbal.Domain.Common.Results
 
             IsSuccess = true;
         }
+
+
+        [JsonConstructor]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("For serializer only.", true)]
+        public Result(TValue? value, List<Error>? errors, bool isSuccess)
+        {
+            if (isSuccess)
+            {
+                _value = value ?? throw new ArgumentNullException(nameof(value));
+                _errors = [];
+                IsSuccess = true;
+            }
+            else
+            {
+                if (errors == null || errors.Count == 0)
+                {
+                    throw new ArgumentException("Provide at least one error.", nameof(errors));
+                }
+
+                _errors = errors;
+                _value = default!;
+                IsSuccess = false;
+            }
+        }
+
         public TNextValue Match<TNextValue>(Func<TValue, TNextValue> onValue, Func<List<Error>, TNextValue> onError)
                => IsSuccess ? onValue(Value!) : onError(Errors);
 

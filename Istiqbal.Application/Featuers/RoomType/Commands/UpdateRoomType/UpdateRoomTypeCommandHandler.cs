@@ -1,7 +1,7 @@
 ﻿using Istiqbal.Application.Common.Interface;
 using Istiqbal.Domain.Common.Results;
 using Istiqbal.Domain.Common.Results.Abstraction;
-using Istiqbal.Domain.Rooms.RoomTypes;
+using Istiqbal.Domain.RoomTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;

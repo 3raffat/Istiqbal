@@ -1,4 +1,4 @@
-﻿using Istiqbal.Application.Featuers.RoomTypes.Dtos;
+﻿using Istiqbal.Application.Featuers.RoomType.Dtos;
 using Istiqbal.Domain.Common.Results;
 using MediatR;
 

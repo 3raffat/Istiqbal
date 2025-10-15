@@ -1,6 +1,11 @@
 ﻿
+using Istiqbal.Api.Infrastructure;
 using Istiqbal.Api.OpenApi;
+using Istiqbal.Api.Services;
+using Istiqbal.Application.Common.Interface;
+using Istiqbal.Contracts.Responses;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using System.Text.Json.Serialization;
 
 namespace Istiqbal.Api
 {
@@ -9,7 +14,12 @@ namespace Istiqbal.Api
         public static IServiceCollection AddPresentation(this IServiceCollection services)
         {
             services.AddCustomApiVersioning()
-                .AddApiDocumentation();
+                .AddApiDocumentation()
+                .AddCustomProblemDetails()
+                .AddExceptionHandling()
+                .AddControllerWithJsonConfiguration()
+                .AddIdentityInfrastructure();
+
             return services;
         }
 
@@ -50,5 +60,37 @@ namespace Istiqbal.Api
             }
             return services;
         }
+        public static IServiceCollection AddCustomProblemDetails(this IServiceCollection services)
+        {
+            services.AddProblemDetails(options => options.CustomizeProblemDetails = (context) =>
+            {
+                context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+                context.ProblemDetails.Extensions.Add("requestId", context.HttpContext.TraceIdentifier);
+            });
+
+            return services;
+        }
+        public static IServiceCollection AddExceptionHandling(this IServiceCollection services)
+        {
+            services.AddExceptionHandler<GlobalExceptionHandler>();
+            return services;
+        }
+        public static IServiceCollection AddControllerWithJsonConfiguration(this IServiceCollection services)
+        {
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions
+                .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            });
+
+            return services;
+        }
+        public static IServiceCollection AddIdentityInfrastructure(this IServiceCollection services)
+        {
+            services.AddScoped<IUser, CurrentUser>();
+            services.AddHttpContextAccessor();
+            return services;
+        }
+
     }
 }

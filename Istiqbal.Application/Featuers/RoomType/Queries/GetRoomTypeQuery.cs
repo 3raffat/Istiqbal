@@ -1,5 +1,5 @@
 ﻿using Istiqbal.Application.Common.Interface;
-using Istiqbal.Application.Featuers.RoomTypes.Dtos;
+using Istiqbal.Application.Featuers.RoomType.Dtos;
 using Istiqbal.Domain.Common.Results;
 using System;
 using System.Collections.Generic;
