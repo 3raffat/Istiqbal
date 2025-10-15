@@ -1,4 +1,4 @@
-﻿using Istiqbal.Domain.Identity;
+﻿using Istiqbal.Domain.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

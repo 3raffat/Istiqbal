@@ -1,5 +1,5 @@
-﻿using Istiqbal.Domain.Guests.Reservations.Feedbacks;
-using Istiqbal.Domain.Guests.Reservations.Payments;
+﻿using Istiqbal.Domain.Guestes.Reservations.Payments;
+using Istiqbal.Domain.Guests.Reservations.Feedbacks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

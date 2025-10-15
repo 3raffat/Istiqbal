@@ -1,4 +1,4 @@
-﻿using Istiqbal.Domain.Identity;
+﻿using Istiqbal.Domain.Auth;
 using Istiqbal.Infrastructure.Data;
 using Istiqbal.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;

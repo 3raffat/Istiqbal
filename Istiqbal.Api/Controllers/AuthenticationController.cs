@@ -1,8 +1,8 @@
 ﻿using Istiqbal.Application.Featuers.Auth.Commands.LoginUsers;
 using Istiqbal.Application.Featuers.Auth.Commands.RegisterUsers;
 using Istiqbal.Contracts.Requests.Auth;
+using Istiqbal.Domain.Auth;
 using Istiqbal.Domain.Common.Results;
-using Istiqbal.Domain.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

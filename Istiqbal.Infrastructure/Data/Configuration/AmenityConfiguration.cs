@@ -1,4 +1,4 @@
-﻿using Istiqbal.Domain.Rooms.Amenities;
+﻿using Istiqbal.Domain.Amenities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

@@ -10,7 +10,7 @@ namespace Istiqbal.Application.Featuers.Guest.Mapper
     public static class GuestMapper
     {
 
-        public static GuestDto toDto(this Domain.Guests.Guest guest)
+        public static GuestDto toDto(this Domain.Guestes.Guest guest)
         {
             return new GuestDto
             (
@@ -21,7 +21,7 @@ namespace Istiqbal.Application.Featuers.Guest.Mapper
             );
         }
 
-        public static List<GuestDto> toDtoList(this List<Domain.Guests.Guest> guests)
+        public static List<GuestDto> ToDtos(this List<Domain.Guestes.Guest> guests)
         {
             return[..guests.Select(x => toDto(x))];
         }

@@ -1,9 +1,7 @@
 ﻿using Istiqbal.Application.Common.Errors;
 using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Room.Dtos;
-using Istiqbal.Application.Featuers.Room.Mappers;
 using Istiqbal.Domain.Common.Results;
-using Istiqbal.Domain.Rooms.Amenities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
@@ -13,13 +11,13 @@ using Microsoft.Extensions.Logging;
 namespace Istiqbal.Application.Featuers.Room.Commands.CreateRoom
 {
     public sealed class CreateRoomCommandHandler
-        (IAppDbContext _context, ILogger<CreateRoomCommandHandler> _logger,HybridCache _cache)
+        (IAppDbContext _context, ILogger<CreateRoomCommandHandler> _logger, HybridCache _cache)
         : IRequestHandler<CreateRoomCommand, Result<RoomDto>>
     {
         public async Task<Result<RoomDto>> Handle(CreateRoomCommand request, CancellationToken cancellationToken)
         {
             var exist = await _context.RoomTypes
-                .AnyAsync(x=>x.Id == request.roomTypeId,cancellationToken);
+                .AnyAsync(x => x.Id == request.roomTypeId, cancellationToken);
 
             if (!exist)
             {
@@ -39,7 +37,7 @@ namespace Istiqbal.Application.Featuers.Room.Commands.CreateRoom
 
             foreach (var amenity in request.Amenities)
             {
-                var amenityResult = Amenity.Create(Guid.NewGuid(),amenity.name);
+                var amenityResult = Amenity.Create(Guid.NewGuid(), amenity.name);
 
                 if (amenityResult.IsError)
                 {
@@ -65,7 +63,7 @@ namespace Istiqbal.Application.Featuers.Room.Commands.CreateRoom
 
             _logger.LogInformation("Room Created Successfully , RoomId: {RoomId}", room.Id);
 
-             await _cache.RemoveByTagAsync("room",cancellationToken);
+            await _cache.RemoveByTagAsync("room", cancellationToken);
 
 
             return room.ToDto();

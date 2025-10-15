@@ -15,12 +15,11 @@ namespace Istiqbal.Api.Controllers
 
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/room-types")]
-    [Tags("Room Type")]
     public class RoomTypeController(ISender _sender): ApiController
     {
 
         [HttpGet]
-        [Authorize(Roles =nameof(Role.Admin))]
+     //   [Authorize(Roles =nameof(Role.Admin))]
         [Consumes(MediaTypeNames.Application.Json)]
         [EndpointName("GetAllRoomTypes")]
         [EndpointDescription("Returns all existing room types in the system.")]
@@ -35,7 +34,7 @@ namespace Istiqbal.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(Role.Admin))]
+      //  [Authorize(Roles = nameof(Role.Admin))]
         [Consumes(MediaTypeNames.Application.Json)]
         [EndpointName("create room type")]
         [EndpointDescription("create new room type.")]
@@ -55,7 +54,7 @@ namespace Istiqbal.Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        [Authorize(Roles = nameof(Role.Admin))]
+    //    [Authorize(Roles = nameof(Role.Admin))]
         [Consumes(MediaTypeNames.Application.Json)]
         [EndpointName("delete room type")]
         [EndpointDescription("delete exist room type.")]
@@ -69,7 +68,7 @@ namespace Istiqbal.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        [Authorize(Roles = nameof(Role.Admin))]
+      //  [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> Update(Guid id, UpdateRoomTypeRequest request, CancellationToken cancellationToken)
         {
             var result = await _sender.Send(

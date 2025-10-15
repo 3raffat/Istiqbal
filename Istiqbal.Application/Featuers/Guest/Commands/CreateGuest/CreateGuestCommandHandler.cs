@@ -3,7 +3,7 @@ using Istiqbal.Application.Featuers.Guest.Dtos;
 using Istiqbal.Application.Featuers.Guest.Mapper;
 using Istiqbal.Application.Featuers.RoomTypes.Commands.CreateRoomType;
 using Istiqbal.Domain.Common.Results;
-using Istiqbal.Domain.Guests;
+using Istiqbal.Domain.Guestes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
@@ -47,8 +47,7 @@ namespace Istiqbal.Application.Featuers.Guest.Commands.CreateGuest
                 }
             }
 
-            var guestResult = Istiqbal.Domain.Guests.
-                Guest.Create(Guid.NewGuid(), guestName, guestPhone, guestEmail);
+            var guestResult = Domain.Guestes.Guest.Create(Guid.NewGuid(), guestName, guestPhone, guestEmail);
 
             if(guestResult.IsError)
                 return guestResult.TopError;

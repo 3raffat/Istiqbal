@@ -1,4 +1,4 @@
-﻿using Istiqbal.Domain.Guests;
+﻿using Istiqbal.Domain.Guestes;
 using Istiqbal.Domain.Guests.Reservations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

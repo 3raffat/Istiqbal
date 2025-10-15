@@ -19,7 +19,8 @@ namespace Istiqbal.Application.Featuers.Guest.Commands.UpdateGuest
 
             RuleFor(x => x.phone)
                 .NotEmpty().WithMessage("Phone number is required.")
-                .Matches(@"^\+[1-9]\d{4,14}$").WithMessage("Phone number must be in E.164 format.");
+                .Matches(@"^\+[1-9]\d{1,3}\d{6,12}$")
+                .WithMessage("Invalid international phone number format. Use + followed by country code and number (e.g., +962787654321).");
 
             RuleFor(x => x.email)
                 .NotEmpty().WithMessage("Email is required.")

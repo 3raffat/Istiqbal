@@ -1,20 +1,14 @@
 ﻿using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Auth.Dtos;
-using Istiqbal.Application.Featuers.Identity.Queries;
+using Istiqbal.Domain.Auth;
 using Istiqbal.Domain.Common.Results;
-using Istiqbal.Domain.Common.Results.Abstraction;
-using Istiqbal.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Istiqbal.Infrastructure.Identity
 {

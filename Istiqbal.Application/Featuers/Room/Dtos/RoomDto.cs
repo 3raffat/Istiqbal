@@ -1,4 +1,5 @@
-﻿using Istiqbal.Domain.Rooms.Amenities;
+﻿using Istiqbal.Application.Featuers.Amenity.Dtos;
+using Istiqbal.Domain.Rooms.Amenities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace Istiqbal.Application.Featuers.Room.Dtos
 {
-    public sealed record  RoomDto (Guid id , int number, string roomType, int floor, string status, List<Amenity> amenities);
+    public sealed record  RoomDto (Guid id , int number, string roomType, int floor, string status, List<AmenityDto> amenities);
    
 }

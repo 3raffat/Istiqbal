@@ -1,5 +1,4 @@
 ﻿using Istiqbal.Application.Featuers.Auth.Dtos;
-using Istiqbal.Application.Featuers.Identity.Dtos;
 using Istiqbal.Domain.Common.Results;
 using System;
 using System.Collections.Generic;

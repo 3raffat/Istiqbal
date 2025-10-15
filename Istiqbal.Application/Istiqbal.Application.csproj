@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Featuers\Amenities\Commands\DeleteAmenity\" />
+    <Folder Include="Featuers\Amenities\Queries\" />
     <Folder Include="Featuers\Auth\Queries\" />
   </ItemGroup>
 

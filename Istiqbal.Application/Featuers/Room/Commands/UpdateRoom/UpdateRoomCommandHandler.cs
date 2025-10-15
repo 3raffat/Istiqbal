@@ -46,23 +46,23 @@ namespace Istiqbal.Application.Featuers.Room.Commands.UpdateRoom
             if(roomResult.IsError)
                 return roomResult.Errors;
 
-            List<Amenity> amenities = new();
+            //List<Amenity> amenities = new();
 
-            foreach (var amenity in request.amenities)
-            {
-                var amenityResult = Istiqbal.Domain.Rooms.Amenities.Amenity
-                    .Create(amenity.id,amenity.name.Trim());
+            //foreach (var amenity in request.amenities)
+            //{
+            //    var amenityResult = Istiqbal.Domain.Rooms.Amenities.Amenity
+            //        .Create(amenity.id,amenity.name.Trim());
 
-                if (amenityResult.IsError)
-                    return amenityResult.Errors;
+            //    if (amenityResult.IsError)
+            //        return amenityResult.Errors;
 
-                amenities.Add(amenityResult.Value);
-            }
+            //    amenities.Add(amenityResult.Value);
+            //}
 
-            var amenitiesResult = room.AddAmenities(amenities);
+            //var amenitiesResult = room.AddAmenities(amenities);
 
-            if (amenitiesResult.IsError)
-                return amenitiesResult.Errors;
+            //if (amenitiesResult.IsError)
+            //    return amenitiesResult.Errors;
 
             await _context.SaveChangesAsync(cancellationToken);
 
