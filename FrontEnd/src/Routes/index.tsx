@@ -3,16 +3,20 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import Layout from "../Pages/Layout";
-import Home from "../Pages/Home";
-import RoomsPage from "../Pages/Rooms/RoomsPage";
+import AdminDashboard from "../Pages/Dashboard/AdminDashboard";
+import AdminLayout from "../Pages/Dashboard/AdminLayout";
+import AdminRoomsPage from "../Pages/Rooms/AdminRoomsPage";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="/rooms" element={<RoomsPage />} />
+      <Route path="/" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="Reservations" element={""} />
+        <Route path="Rooms" element={<AdminRoomsPage />} />
+        <Route path="Guests" element={"Guests"} />
+        <Route path="Payments" element={"Payments"} />
+        <Route path="Employees" element={"Employees"} />
       </Route>
     </>
   )

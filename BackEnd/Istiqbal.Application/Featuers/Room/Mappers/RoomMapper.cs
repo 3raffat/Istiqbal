@@ -15,6 +15,7 @@ namespace Istiqbal.Application.Featuers.Room.Mappers
                 room.Type.Name,
                 room.Floor,
                 room.Status,
+                room.Type.PricePerNight,
                 room.Amenities.Select(a=>a.toDto()).ToList()
             );
         }

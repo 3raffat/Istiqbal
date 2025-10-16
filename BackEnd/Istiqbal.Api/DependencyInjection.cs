@@ -18,7 +18,8 @@ namespace Istiqbal.Api
                 .AddCustomProblemDetails()
                 .AddExceptionHandling()
                 .AddControllerWithJsonConfiguration()
-                .AddIdentityInfrastructure();
+                .AddIdentityInfrastructure()
+                .AddCors();
 
             return services;
         }
@@ -89,6 +90,21 @@ namespace Istiqbal.Api
         {
             services.AddScoped<IUser, CurrentUser>();
             services.AddHttpContextAccessor();
+            return services;
+        }
+        public static IServiceCollection AddCors(this IServiceCollection services)
+        {
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.WithOrigins("http://localhost:5000")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .WithExposedHeaders();
+                });
+            });
             return services;
         }
 

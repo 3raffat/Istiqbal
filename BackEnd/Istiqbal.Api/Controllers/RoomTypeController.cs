@@ -1,4 +1,5 @@
-﻿using Istiqbal.Application.Featuers.RoomTypes.Commands.CreateRoomType;
+﻿using Istiqbal.Api.Extension;
+using Istiqbal.Application.Featuers.RoomTypes.Commands.CreateRoomType;
 using Istiqbal.Application.Featuers.RoomTypes.Commands.DeleteRoomType;
 using Istiqbal.Application.Featuers.RoomTypes.Commands.UpdateRoomType;
 using Istiqbal.Application.Featuers.RoomTypes.Queries;
@@ -26,10 +27,8 @@ namespace Istiqbal.Api.Controllers
         {
             var result = await _sender.Send(new GetRoomTypeQuery(), cancellationToken);
 
-            return result.Match(
-            response => Ok(response),
-            Problem);
-            
+            return result.ToActionResult(this, "Room type retrieved successfully");
+
         }
 
         [HttpPost]

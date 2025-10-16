@@ -32,6 +32,7 @@ if (app.Environment.IsDevelopment())
     await app.InitialiseDatabaseAsync();
 }
 
+app.UseCors();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
