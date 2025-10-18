@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Istiqbal.Api/Istiqbal.Api.csproj" />
+  <Project Path="Istiqbal.Application/Istiqbal.Application.csproj" />
+  <Project Path="Istiqbal.Contracts/Istiqbal.Contracts.csproj" />
+  <Project Path="Istiqbal.Domain/Istiqbal.Domain.csproj" />
+  <Project Path="Istiqbal.Infrastructure/Istiqbal.Infrastructure.csproj" />
+</Solution>
