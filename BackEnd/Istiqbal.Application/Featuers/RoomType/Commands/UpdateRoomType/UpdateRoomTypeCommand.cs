@@ -10,6 +10,6 @@ using System.Xml.Linq;
 
 namespace Istiqbal.Application.Featuers.RoomTypes.Commands.UpdateRoomType
 {
-    public sealed record  UpdateRoomTypeCommand(Guid Id,string Name, string Description, decimal PricePerNight, int MaxOccupancy) 
+    public sealed record  UpdateRoomTypeCommand(Guid Id,string Name, string Description, decimal PricePerNight, int MaxOccupancy,List<Guid> amenitieIds) 
         :IRequest<Result<Updated>>;
 }

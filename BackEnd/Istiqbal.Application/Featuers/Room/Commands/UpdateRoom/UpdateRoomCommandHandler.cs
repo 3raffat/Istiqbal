@@ -17,7 +17,6 @@ namespace Istiqbal.Application.Featuers.Room.Commands.UpdateRoom
         public async Task<Result<Updated>> Handle(UpdateRoomCommand request, CancellationToken cancellationToken)
         {
             var room = await _context.Rooms
-                .Include(x=>x.Amenities)
                 .SingleOrDefaultAsync(x => x.Id == request.id,cancellationToken);
 
             if (room is null)
@@ -36,22 +35,8 @@ namespace Istiqbal.Application.Featuers.Room.Commands.UpdateRoom
                 return ApplicationErrors.RoomTypeNotFound;
             }
 
-            List<Domain.Amenities.Amenity> amenities = new();
 
-            foreach (var amenityId in request.amenitiesId)
-            {
-                var existAmenity = await _context.Amenities.FirstOrDefaultAsync(x => x.Id == amenityId, cancellationToken);
-
-                if (existAmenity is null)
-                {
-                    _logger.LogWarning("Amenity with ID {Id} not found ", amenityId);
-
-                }
-
-                amenities.Add(existAmenity!);
-            }
-
-            var roomResult = room.Update(request.roomStatus, request.roomTypeId,amenities);
+            var roomResult = room.Update(request.roomStatus, request.roomTypeId);
 
             if (roomResult.IsError)
                 return roomResult.Errors;

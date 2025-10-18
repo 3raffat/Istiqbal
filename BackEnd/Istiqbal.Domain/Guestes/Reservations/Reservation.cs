@@ -21,7 +21,7 @@ namespace Istiqbal.Domain.Guestes.Reservations
         public ReservationStatus Status { get; set; } = ReservationStatus.Pending;
         public Payment Payment { get; set; }
         private readonly List<Feedback> _feedbacks = new();
-        public IReadOnlyCollection<Feedback> Feedbacks => _feedbacks.AsReadOnly();
+        public IEnumerable<Feedback> Feedbacks => _feedbacks.AsReadOnly();
         public decimal MaxOccupancy { get;private set; }
         private Reservation() { }
         private Reservation(Guid id, Guid guestId, Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate, short numberOfGuests, ReservationStatus status,decimal amount ,decimal maxOccupancy) : base(id)

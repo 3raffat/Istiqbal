@@ -28,6 +28,11 @@ namespace Istiqbal.Application.Featuers.RoomTypes.Commands.UpdateRoomType
 
             RuleFor(x => x.MaxOccupancy)
                 .GreaterThan(0).WithMessage("Max occupancy must be greater than zero.");
+
+            RuleFor(x => x.amenitieIds)
+                .NotNull().WithMessage("Amenities IDs list cannot be null.")
+                .Must(list => list != null && list.Count > 0)
+                .WithMessage("Amenities IDs list must contain at least one ID.");
         }
     }
 }

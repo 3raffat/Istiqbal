@@ -11,6 +11,7 @@ using Istiqbal.Domain.RoomTypes.Rooms;
 using Istiqbal.Infrastructure.Auth;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 
 namespace Istiqbal.Infrastructure.Data
@@ -30,7 +31,10 @@ namespace Istiqbal.Infrastructure.Data
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
-     
+        public EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class
+        {
+            return base.Entry(entity);
+        }
         public DbSet<Room> Rooms => Set<Room>();
 
         public DbSet<RoomType> RoomTypes => Set<RoomType>();

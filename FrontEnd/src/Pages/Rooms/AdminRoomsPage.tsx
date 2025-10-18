@@ -25,7 +25,6 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 import { useToast } from "../../hooks/use-toast";
-import { getStatusColor, getStatusText } from "../../Data/data";
 import { useAmenity, useRoom, useRoomtype } from "../../apis/data";
 import { Badge } from "../../components/ui/badge";
 import { MultiSelect } from "../../components/ui/MultiSelect";
@@ -279,9 +278,9 @@ export default function AdminRoomsPage() {
                               {room.roomTypeId}
                             </div>
                           </div>
-                          <Badge className={getStatusColor(room.status)}>
+                          {/* <Badge className={getStatusColor(room.status)}>
                             {getStatusText(room.status)}
-                          </Badge>
+                          </Badge> */}
                         </div>
 
                         <div className="flex gap-2 mt-4">

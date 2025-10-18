@@ -14,17 +14,15 @@ namespace Istiqbal.Domain.RoomTypes.Rooms
         public int Floor { get;  }
         public RoomStatus Status { get; private set; } = RoomStatus.Available;
         private readonly List<Reservation> _reservation = new();
-        public IReadOnlyCollection<Reservation> Reservation => _reservation.AsReadOnly();
-        private List<Amenity> _amenities = new();
-        public IReadOnlyCollection<Amenity> Amenities => _amenities.AsReadOnly();
+        public IEnumerable<Reservation> Reservation => _reservation.AsReadOnly();
+  
         private Room() { }
-        private Room(Guid id, Guid roomTypeId,int floor, List<Amenity> amenities) : base(id)
+        private Room(Guid id, Guid roomTypeId,int floor) : base(id)
         {
             RoomTypeId = roomTypeId;
             Floor = floor;
-            _amenities = amenities;
         }
-        public static Result<Room> Create(Guid id, Guid roomTypeId,int floor, List<Amenity> amenities)
+        public static Result<Room> Create(Guid id, Guid roomTypeId,int floor)
         {
             if (id == Guid.Empty)
                 return RoomErrors.RoomIdRequerd;
@@ -33,9 +31,9 @@ namespace Istiqbal.Domain.RoomTypes.Rooms
                 return RoomErrors.RoomTypeIdRequerd;
 
 
-            return new Room(id, roomTypeId, GetFloorNumber(floor), amenities);
+            return new Room(id, roomTypeId, GetFloorNumber(floor));
         }
-        public Result<Updated> Update(RoomStatus roomStatus, Guid roomTypeId, List<Amenity> amenities)
+        public Result<Updated> Update(RoomStatus roomStatus, Guid roomTypeId)
         {
 
             if (roomTypeId == Guid.Empty)
@@ -46,31 +44,30 @@ namespace Istiqbal.Domain.RoomTypes.Rooms
 
             Status = roomStatus;
             RoomTypeId = roomTypeId;
-            _amenities = amenities;
             return Result.Updated;
         }
-        public Result<Updated> AddAmenities(List<Amenity> amenities)
-        {
-            _amenities.RemoveAll(exist => amenities.All(x=>x.Id != exist.Id)); 
+        //public Result<Updated> AddAmenities(List<Amenity> amenities)
+        //{
+        //    _amenities.RemoveAll(exist => amenities.All(x=>x.Id != exist.Id)); 
 
-            foreach (var amenity in amenities)
-            {
-               var exist = _amenities.FirstOrDefault(x => x.Id == amenity.Id);
-                if (exist is null)
-                {
-                    _amenities.Add(amenity);
-                }
-                else
-                {
-                    var result = exist.Update(amenity.Name);
+        //    foreach (var amenity in amenities)
+        //    {
+        //       var exist = _amenities.FirstOrDefault(x => x.Id == amenity.Id);
+        //        if (exist is null)
+        //        {
+        //            _amenities.Add(amenity);
+        //        }
+        //        else
+        //        {
+        //            var result = exist.Update(amenity.Name);
 
-                    if (result.IsError)
-                        return result.Errors;
-                }
+        //            if (result.IsError)
+        //                return result.Errors;
+        //        }
 
-            }
-            return Result.Updated;
-        }
+        //    }
+        //    return Result.Updated;
+        //}
         private static int GetFloorNumber(int lastRoomNumber,int roomPerFloor = 10)
         {
          

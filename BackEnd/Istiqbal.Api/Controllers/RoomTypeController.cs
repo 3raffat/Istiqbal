@@ -43,7 +43,8 @@ namespace Istiqbal.Api.Controllers
              (request.Name,
              request.Description,
              request.PricePerNight,
-             request.MaxOccupancy)
+             request.MaxOccupancy,
+             request.AmenitieIds)
              , cancellationToken);
 
             return result.Match(
@@ -75,7 +76,8 @@ namespace Istiqbal.Api.Controllers
                     request.Name,
                     request.Description,
                     request.PricePerNight,
-                    request.MaxOccupancy)
+                    request.MaxOccupancy,
+                    request.AmenitieIds)
                 , cancellationToken);
 
             return result.Match(

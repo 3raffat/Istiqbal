@@ -1,6 +1,8 @@
-﻿using Istiqbal.Domain.Common;
+﻿using Istiqbal.Domain.Amenities;
+using Istiqbal.Domain.Common;
 using Istiqbal.Domain.Common.Results;
 using Istiqbal.Domain.RoomTypes.Rooms;
+using System.Collections.Generic;
 
 namespace Istiqbal.Domain.RoomTypes
 {
@@ -10,17 +12,20 @@ namespace Istiqbal.Domain.RoomTypes
         public string Description { get; private set; } = string.Empty;
         public decimal PricePerNight { get; private set; }
         public int MaxOccupancy { get; private set; }
-        public List<Room> Rooms = new();
-        private IReadOnlyCollection<Room> _rooms => Rooms.AsReadOnly();
+        private List<Room> _rooms = new();
+        public IEnumerable<Room> Rooms => _rooms.AsReadOnly();
+        private  List<Amenity> _amenities = new();
+        public IEnumerable<Amenity> Amenities => _amenities.AsReadOnly();
         private RoomType() { }
-        private RoomType(Guid id, string name, string description, decimal pricePerNight, int maxOccupancy) : base(id)
+        private RoomType(Guid id, string name, string description, decimal pricePerNight, int maxOccupancy,List<Amenity> amenities) : base(id)
         {
             Name = name;
             Description = description;
             PricePerNight = pricePerNight;
             MaxOccupancy = maxOccupancy;
+            _amenities = amenities;
         }
-        public static Result<RoomType> Create(Guid id, string name, string description, decimal pricePerNight, int maxOccupancy)
+        public static Result<RoomType> Create(Guid id, string name, string description, decimal pricePerNight, int maxOccupancy, List<Amenity> amenities)
         {
             if (id == Guid.Empty)
                 return RoomTypeErrors.RoomTypeIdRequerd;
@@ -37,9 +42,9 @@ namespace Istiqbal.Domain.RoomTypes
             if (maxOccupancy <= 0)
                 return RoomTypeErrors.RoomTypeMaxOccupancyInvalid;
 
-            return new RoomType(id, name, description, pricePerNight, maxOccupancy);
+            return new RoomType(id, name, description, pricePerNight, maxOccupancy,amenities);
         }
-        public Result<Updated> Update( string name, string description, decimal pricePerNight, int maxOccupancy)
+        public Result<Updated> Update( string name, string description, decimal pricePerNight, int maxOccupancy, List<Amenity> amenities)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return RoomTypeErrors.RoomTypeNameRequerd;
@@ -57,6 +62,7 @@ namespace Istiqbal.Domain.RoomTypes
             Description = description;
             PricePerNight = pricePerNight;
             MaxOccupancy = maxOccupancy;
+            _amenities = amenities;
             return Result.Updated;
         }
     }

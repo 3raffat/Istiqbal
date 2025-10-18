@@ -5,6 +5,6 @@ using MediatR;
 
 namespace Istiqbal.Application.Featuers.Room.Commands.CreateRoom
 {
-    public sealed record CreateRoomCommand(Guid roomTypeId,List<Guid> AmenitiesIds):IRequest<Result<RoomDto>>;
+    public sealed record CreateRoomCommand(Guid roomTypeId):IRequest<Result<RoomDto>>;
 
 }

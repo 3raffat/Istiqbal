@@ -1,4 +1,5 @@
 ﻿using Istiqbal.Application.Common.Interface;
+using Istiqbal.Domain.Amenities;
 using Istiqbal.Domain.Common.Results;
 using Istiqbal.Domain.Common.Results.Abstraction;
 using Istiqbal.Domain.RoomTypes;
@@ -30,11 +31,27 @@ namespace Istiqbal.Application.Featuers.RoomTypes.Commands.UpdateRoomType
                 return RoomTypeErrors.RoomTypeNotFound;
             }
 
+            List<Domain.Amenities.Amenity> amenities = new();
+
+            foreach (var amenityId in request.amenitieIds)
+            {
+                var existAmenity = await _context.Amenities.FirstOrDefaultAsync(x => x.Id == amenityId, cancellationToken);
+
+                if (existAmenity is null)
+                {
+                    _logger.LogWarning("Amenity with ID {Id} not found ", amenityId);
+
+                    return AmenityErrors.AmenityIdNotFound;   
+                }
+
+                amenities.Add(existAmenity!);
+            }
             var updatedRoomType = 
                 roomType.Update(request.Name.Trim(), 
                 request.Description.Trim(), 
                 request.PricePerNight,
-                request.MaxOccupancy);
+                request.MaxOccupancy,
+                amenities);
 
             if(updatedRoomType.IsError)
                 return updatedRoomType.Errors;

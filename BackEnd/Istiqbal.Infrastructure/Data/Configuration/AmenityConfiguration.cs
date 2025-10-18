@@ -19,7 +19,11 @@ namespace Istiqbal.Infrastructure.Data.Configuration
                    .IsRequired()
                    .HasMaxLength(50);
 
-       
+            builder.HasMany(r => r.Types)
+                   .WithMany(r => r.Amenities);
+
+            builder.Navigation(r => r.Types)
+           .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

@@ -9,10 +9,10 @@ import {
 } from "lucide-react";
 
 export const navigation = [
-  { name: "Dashboard", to: "/admin", icon: LayoutDashboard },
-  { name: "Reservations", to: "/admin/reservations", icon: Calendar },
-  { name: "Rooms", to: "/admin/rooms", icon: DoorOpen },
-  { name: "Guests", to: "/admin/guests", icon: Users },
-  { name: "Payments", to: "/admin/payments", icon: DollarSign },
-  { name: "Employees", to: "/admin/employees", icon: UserCog },
+  { name: "Dashboard", to: "/", icon: LayoutDashboard },
+  { name: "Reservations", to: "/reservations", icon: Calendar },
+  { name: "Rooms", to: "/rooms", icon: DoorOpen },
+  { name: "Guests", to: "/guests", icon: Users },
+  { name: "Payments", to: "/payments", icon: DollarSign },
+  { name: "Employees", to: "Zxcf/employees", icon: UserCog },
 ];

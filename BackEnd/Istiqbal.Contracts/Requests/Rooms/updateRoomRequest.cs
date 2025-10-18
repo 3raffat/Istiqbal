@@ -10,7 +10,6 @@ namespace Istiqbal.Contracts.Requests.Rooms
     public class updateRoomRequest
     {
         public Guid roomTypeId { get; set; }
-        public List<Guid> amenitiesId { get; set; }
         public RoomStatus roomStatus { get; set; }
     }
     [JsonConverter(typeof(JsonStringEnumConverter))]

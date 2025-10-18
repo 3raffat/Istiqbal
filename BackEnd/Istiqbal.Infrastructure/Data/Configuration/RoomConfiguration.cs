@@ -26,9 +26,6 @@ namespace Istiqbal.Infrastructure.Data.Configuration
                 .HasForeignKey(r => r.RoomTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(r => r.Amenities)
-                .WithMany(r => r.Rooms);
-
             builder.Property(r => r.Status)
                 .HasConversion<string>()
                 .IsRequired();
@@ -40,6 +37,9 @@ namespace Istiqbal.Infrastructure.Data.Configuration
                 .WithOne(res => res.Room)
                 .HasForeignKey(res => res.RoomId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Navigation(r => r.Reservation)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

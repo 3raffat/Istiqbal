@@ -30,8 +30,7 @@ namespace Istiqbal.Api.Controllers
         {
             var result = await _sender.Send(
                 new CreateRoomCommand(
-                    request.roomTypeId
-                   ,request.AmenitiesIds)
+                    request.roomTypeId)
                    ,cancellationToken);
 
             return result.ToActionResult(
@@ -69,9 +68,7 @@ namespace Istiqbal.Api.Controllers
                 new UpdateRoomCommand(
                     id
                     ,request.roomTypeId
-                    ,request.amenitiesId
-                    ,request.roomStatus
-                    )
+                    ,request.roomStatus)
                 , cancellationToken);
 
             return result.ToActionResult(this, "Room updated successfully");

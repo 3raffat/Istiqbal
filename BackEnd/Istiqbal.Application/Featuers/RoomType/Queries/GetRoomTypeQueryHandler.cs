@@ -13,7 +13,7 @@ namespace Istiqbal.Application.Featuers.RoomTypes.Queries
     {
         public async Task<Result<List<RoomTypeDto>>> Handle(GetRoomTypeQuery request, CancellationToken cancellationToken)
         {
-            var roomTypes = await _context.RoomTypes.Where(x=>!x.IsDeleted).AsNoTracking().ToListAsync(cancellationToken);
+            var roomTypes = await _context.RoomTypes.Where(x=>!x.IsDeleted).Include(x=>x.Amenities).AsNoTracking().ToListAsync(cancellationToken);
 
             return roomTypes.ToDtos();
         }

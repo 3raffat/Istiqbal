@@ -13,7 +13,7 @@ namespace Istiqbal.Domain.Guestes
         public string Phone { get; private set; } = string.Empty;
         public string Email { get; private set; } = string.Empty;
         private readonly List<Reservation> _reservation = new();
-        public IReadOnlyCollection<Reservation> Reservation => _reservation.AsReadOnly();
+        public IEnumerable<Reservation> Reservation => _reservation.AsReadOnly();
         private Guest() { }
         private Guest(Guid id,string fullName, string phone, string email) :base(id)
         {

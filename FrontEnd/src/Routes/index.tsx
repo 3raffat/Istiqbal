@@ -3,9 +3,9 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import AdminDashboard from "../Pages/Dashboard/AdminDashboard";
-import AdminLayout from "../Pages/Dashboard/AdminLayout";
-import AdminRoomsPage from "../Pages/Rooms/AdminRoomsPage";
+import AdminLayout from "../pages/Dashboard/AdminLayout";
+import AdminDashboard from "../pages/Dashboard/AdminDashboard";
+import AdminRoomsPage from "../pages/Rooms/AdminRoomsPage";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(

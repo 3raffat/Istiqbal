@@ -1,4 +1,5 @@
-﻿using Istiqbal.Application.Featuers.RoomType.Dtos;
+﻿using Istiqbal.Application.Featuers.Amenity.Mapper;
+using Istiqbal.Application.Featuers.RoomType.Dtos;
 using Istiqbal.Domain.RoomTypes;
 
 namespace Istiqbal.Application.Featuers.RoomType.Mappers
@@ -10,7 +11,13 @@ namespace Istiqbal.Application.Featuers.RoomType.Mappers
         {
             ArgumentNullException.ThrowIfNull(entity);
 
-            return new RoomTypeDto(entity.Id, entity.Name, entity.Description, entity.PricePerNight, entity.MaxOccupancy);
+            return new RoomTypeDto(entity.Id,
+                entity.Name,
+                entity.Description,
+                entity.PricePerNight,
+                entity.MaxOccupancy,
+                entity.Amenities.Select(x =>x.toDto()).ToList()
+                );
         }
 
         public static List<RoomTypeDto> ToDtos(this IEnumerable<Istiqbal.Domain.RoomTypes.RoomType> entities)

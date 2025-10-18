@@ -27,6 +27,8 @@ namespace Istiqbal.Infrastructure.Data.Configuration
             builder.Property(rt => rt.MaxOccupancy)
                 .IsRequired();
 
+            builder.Navigation(rt => rt.Rooms)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

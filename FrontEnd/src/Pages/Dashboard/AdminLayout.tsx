@@ -1,8 +1,7 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { AdminGuard } from "../../components/admin-guard";
-import { navigation } from "../../Data/data";
 import { Button } from "../../components/ui/button";
 import { Hotel, LogOut } from "lucide-react";
+import { navigation } from "../../Routes/route";
 
 export default function AdminLayout() {
   const pathname = useLocation().pathname;
@@ -34,11 +33,11 @@ export default function AdminLayout() {
         {/* Navigation */}
         <nav className="space-y-2 mb-8">
           {navigation.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = pathname === item.to;
             return (
               <Link
-                key={item.href}
-                to={item.href}
+                key={item.to}
+                to={item.to}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                   isActive
                     ? "bg-amber-500 text-white"

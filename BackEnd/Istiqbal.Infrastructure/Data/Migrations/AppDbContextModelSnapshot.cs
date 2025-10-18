@@ -22,22 +22,106 @@ namespace Istiqbal.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AmenityRoom", b =>
+            modelBuilder.Entity("AmenityRoomType", b =>
                 {
                     b.Property<Guid>("AmenitiesId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("RoomsId")
+                    b.Property<Guid>("TypesId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("AmenitiesId", "RoomsId");
+                    b.HasKey("AmenitiesId", "TypesId");
 
-                    b.HasIndex("RoomsId");
+                    b.HasIndex("TypesId");
 
-                    b.ToTable("AmenityRoom");
+                    b.ToTable("AmenityRoomType");
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Guests.Guest", b =>
+            modelBuilder.Entity("Istiqbal.Domain.Amenities.Amenity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DeletedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastModifiedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Amenities");
+                });
+
+            modelBuilder.Entity("Istiqbal.Domain.Auth.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DeletedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("ExpiresOnUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastModifiedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Token")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique()
+                        .HasFilter("[Token] IS NOT NULL");
+
+                    b.ToTable("RefreshTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Istiqbal.Domain.Guestes.Guest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,7 +171,7 @@ namespace Istiqbal.Infrastructure.Data.Migrations
                     b.ToTable("Guests");
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Guests.Reservations.Feedbacks.Feedback", b =>
+            modelBuilder.Entity("Istiqbal.Domain.Guestes.Reservations.Feedbacks.Feedback", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -135,7 +219,7 @@ namespace Istiqbal.Infrastructure.Data.Migrations
                     b.ToTable("Feedbacks");
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Guests.Reservations.Payments.Payment", b =>
+            modelBuilder.Entity("Istiqbal.Domain.Guestes.Reservations.Payments.Payment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -163,7 +247,7 @@ namespace Istiqbal.Infrastructure.Data.Migrations
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Guests.Reservations.Reservation", b =>
+            modelBuilder.Entity("Istiqbal.Domain.Guestes.Reservations.Reservation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -224,7 +308,7 @@ namespace Istiqbal.Infrastructure.Data.Migrations
                     b.ToTable("Reservations");
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Identity.RefreshToken", b =>
+            modelBuilder.Entity("Istiqbal.Domain.RoomTypes.RoomType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -242,53 +326,11 @@ namespace Istiqbal.Infrastructure.Data.Migrations
                     b.Property<DateTimeOffset?>("DeletedUtc")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset>("ExpiresOnUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("LastModifiedUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Token")
+                    b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Token")
-                        .IsUnique()
-                        .HasFilter("[Token] IS NOT NULL");
-
-                    b.ToTable("RefreshTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Istiqbal.Domain.Rooms.Amenities.Amenity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("CreatedAtUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset?>("DeletedUtc")
-                        .HasColumnType("datetimeoffset");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -297,18 +339,25 @@ namespace Istiqbal.Infrastructure.Data.Migrations
 
                     b.Property<DateTimeOffset>("LastModifiedUtc")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("MaxOccupancy")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<decimal>("PricePerNight")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Amenities");
+                    b.ToTable("RoomTypes");
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Rooms.Room", b =>
+            modelBuilder.Entity("Istiqbal.Domain.RoomTypes.Rooms.Room", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -358,56 +407,7 @@ namespace Istiqbal.Infrastructure.Data.Migrations
                     b.ToTable("Rooms");
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Rooms.RoomTypes.RoomType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("CreatedAtUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset?>("DeletedUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("LastModifiedUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("MaxOccupancy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<decimal>("PricePerNight")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RoomTypes");
-                });
-
-            modelBuilder.Entity("Istiqbal.Infrastructure.Identity.AppUser", b =>
+            modelBuilder.Entity("Istiqbal.Infrastructure.Auth.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -605,24 +605,24 @@ namespace Istiqbal.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AmenityRoom", b =>
+            modelBuilder.Entity("AmenityRoomType", b =>
                 {
-                    b.HasOne("Istiqbal.Domain.Rooms.Amenities.Amenity", null)
+                    b.HasOne("Istiqbal.Domain.Amenities.Amenity", null)
                         .WithMany()
                         .HasForeignKey("AmenitiesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Istiqbal.Domain.Rooms.Room", null)
+                    b.HasOne("Istiqbal.Domain.RoomTypes.RoomType", null)
                         .WithMany()
-                        .HasForeignKey("RoomsId")
+                        .HasForeignKey("TypesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Guests.Reservations.Feedbacks.Feedback", b =>
+            modelBuilder.Entity("Istiqbal.Domain.Guestes.Reservations.Feedbacks.Feedback", b =>
                 {
-                    b.HasOne("Istiqbal.Domain.Guests.Reservations.Reservation", "Reservation")
+                    b.HasOne("Istiqbal.Domain.Guestes.Reservations.Reservation", "Reservation")
                         .WithMany("Feedbacks")
                         .HasForeignKey("ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -631,26 +631,26 @@ namespace Istiqbal.Infrastructure.Data.Migrations
                     b.Navigation("Reservation");
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Guests.Reservations.Payments.Payment", b =>
+            modelBuilder.Entity("Istiqbal.Domain.Guestes.Reservations.Payments.Payment", b =>
                 {
-                    b.HasOne("Istiqbal.Domain.Guests.Reservations.Reservation", "Reservation")
+                    b.HasOne("Istiqbal.Domain.Guestes.Reservations.Reservation", "Reservation")
                         .WithOne("Payment")
-                        .HasForeignKey("Istiqbal.Domain.Guests.Reservations.Payments.Payment", "ReservationId")
+                        .HasForeignKey("Istiqbal.Domain.Guestes.Reservations.Payments.Payment", "ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Reservation");
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Guests.Reservations.Reservation", b =>
+            modelBuilder.Entity("Istiqbal.Domain.Guestes.Reservations.Reservation", b =>
                 {
-                    b.HasOne("Istiqbal.Domain.Guests.Guest", "Guest")
+                    b.HasOne("Istiqbal.Domain.Guestes.Guest", "Guest")
                         .WithMany("Reservation")
                         .HasForeignKey("GuestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Istiqbal.Domain.Rooms.Room", "Room")
+                    b.HasOne("Istiqbal.Domain.RoomTypes.Rooms.Room", "Room")
                         .WithMany("Reservation")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -661,9 +661,9 @@ namespace Istiqbal.Infrastructure.Data.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Rooms.Room", b =>
+            modelBuilder.Entity("Istiqbal.Domain.RoomTypes.Rooms.Room", b =>
                 {
-                    b.HasOne("Istiqbal.Domain.Rooms.RoomTypes.RoomType", "Type")
+                    b.HasOne("Istiqbal.Domain.RoomTypes.RoomType", "Type")
                         .WithMany("Rooms")
                         .HasForeignKey("RoomTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -683,7 +683,7 @@ namespace Istiqbal.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Istiqbal.Infrastructure.Identity.AppUser", null)
+                    b.HasOne("Istiqbal.Infrastructure.Auth.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -692,7 +692,7 @@ namespace Istiqbal.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Istiqbal.Infrastructure.Identity.AppUser", null)
+                    b.HasOne("Istiqbal.Infrastructure.Auth.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -707,7 +707,7 @@ namespace Istiqbal.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Istiqbal.Infrastructure.Identity.AppUser", null)
+                    b.HasOne("Istiqbal.Infrastructure.Auth.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -716,19 +716,19 @@ namespace Istiqbal.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Istiqbal.Infrastructure.Identity.AppUser", null)
+                    b.HasOne("Istiqbal.Infrastructure.Auth.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Guests.Guest", b =>
+            modelBuilder.Entity("Istiqbal.Domain.Guestes.Guest", b =>
                 {
                     b.Navigation("Reservation");
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Guests.Reservations.Reservation", b =>
+            modelBuilder.Entity("Istiqbal.Domain.Guestes.Reservations.Reservation", b =>
                 {
                     b.Navigation("Feedbacks");
 
@@ -736,14 +736,14 @@ namespace Istiqbal.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Istiqbal.Domain.Rooms.Room", b =>
-                {
-                    b.Navigation("Reservation");
-                });
-
-            modelBuilder.Entity("Istiqbal.Domain.Rooms.RoomTypes.RoomType", b =>
+            modelBuilder.Entity("Istiqbal.Domain.RoomTypes.RoomType", b =>
                 {
                     b.Navigation("Rooms");
+                });
+
+            modelBuilder.Entity("Istiqbal.Domain.RoomTypes.Rooms.Room", b =>
+                {
+                    b.Navigation("Reservation");
                 });
 #pragma warning restore 612, 618
         }
