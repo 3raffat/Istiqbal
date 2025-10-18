@@ -7,14 +7,6 @@ export interface RoomType {
   amenities: string[];
 }
 
-export interface Room {
-  id: string;
-  roomNumber: string;
-  roomTypeId: string;
-  floor: number;
-  status: "available" | "occupied" | "maintenance" | "reserved";
-}
-
 export interface Amenity {
   id: string;
   name: string;
@@ -66,7 +58,7 @@ export interface RoomsResponse {
   data: {
     id: string;
     number: number;
-    roomTypeId: string;
+    roomTypeName: string;
     floor: number;
     status: string;
     amountPerNight: number;
@@ -99,4 +91,32 @@ export interface RoomTypeResponse {
   success: boolean;
   message: string;
   timestamp: string; // or Date if you convert it
+}
+
+export interface Room {
+  id: string;
+  number: number;
+  roomTypeName: string;
+  floor: number;
+  status: string; // extend as needed
+  amountPerNight: number;
+}
+
+export type status = "Available" | "Occupied" | "UnderMaintenance" | "Cleaning";
+export const StatusOptions = [
+  "Available",
+  "Occupied",
+  "UnderMaintenance",
+  "Cleaning",
+];
+export interface GuestResponse {
+  data: {
+    id: string;
+    fullName: string;
+    email: string;
+    phone: string;
+  }[];
+  success: boolean;
+  message: string;
+  timestamp: string;
 }

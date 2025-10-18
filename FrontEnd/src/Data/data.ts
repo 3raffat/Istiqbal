@@ -1,20 +1,5 @@
-import {
-  Building2,
-  Calendar,
-  DollarSign,
-  LayoutDashboard,
-  Users,
-} from "lucide-react";
-import { roomTypes } from "../lib/mock-data";
 /*_____________________________________________________________________________________________*/
-export const navigation = [
-  { name: "لوحة التحكم", href: "/", icon: LayoutDashboard },
-  { name: "الغرف", href: "/rooms", icon: Building2 },
-  { name: "النزلاء", href: "/guests", icon: Users },
-  { name: "الحجوزات", href: "/reservations", icon: Calendar },
-  { name: "المدفوعات", href: "/payments", icon: DollarSign },
-];
-/*_____________________________________________________________________________________________*/
+
 export const getStatusColor = (status: string) => {
   switch (status.trim()) {
     case "Available":
@@ -29,9 +14,8 @@ export const getStatusColor = (status: string) => {
       return "bg-slate-100 text-slate-700";
   }
 };
-
 export const getStatusText = (status: string) => {
-  switch (status) {
+  switch (status.trim()) {
     case "Available":
       return "متاحة";
     case "Occupied":
@@ -44,13 +28,3 @@ export const getStatusText = (status: string) => {
       return status;
   }
 };
-export const getRoomTypeName = (roomTypeId: string) => {
-  return roomTypes.find((rt) => rt.id === roomTypeId)?.name || "غير معروف";
-};
-export const RoomState = [
-  "Available",
-  "Occupied",
-  "UnderMaintenance",
-  "Cleaning",
-];
-/*_____________________________________________________________________________________________*/

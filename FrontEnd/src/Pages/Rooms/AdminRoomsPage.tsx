@@ -25,33 +25,34 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 import { useToast } from "../../hooks/use-toast";
-import { useAmenity, useRoom, useRoomtype } from "../../apis/data";
+import { useRoom, useRoomtype } from "../../apis/data";
 import { Badge } from "../../components/ui/badge";
-import { MultiSelect } from "../../components/ui/MultiSelect";
 import axiosInstance from "../../config/config";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { getStatusColor, getStatusText } from "../../Data/data";
+import { StatusOptions, type status } from "../../lib/types";
 
 type RoomFormData = {
   roomTypeId: string;
-  amenitiesIds: [];
+  roomStatus: status;
 };
 
 export default function AdminRoomsPage() {
+  const [roomId, setRoomId] = useState<string>();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editModel, setEditModel] = useState(true);
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const data = useRoom();
   const rooms = data.data?.data ?? [];
-  const amanity = useAmenity();
-  const amanityData = amanity.data?.data ?? [];
   const types = useRoomtype();
   const dataa = types.data?.data ?? [];
+
   const roomtype = dataa?.map((x) => ({
     id: x.id,
     name: x.name,
   }));
-  console.log();
+
   const {
     handleSubmit,
     reset,
@@ -61,38 +62,70 @@ export default function AdminRoomsPage() {
 
   const HandelDelete = async (id: string) => {
     if (confirm("هل أنت متأكد من حذف هذه الغرفة؟")) {
-      console.log(id);
-      await axiosInstance.delete(`/rooms/${id}`);
-      queryClient.invalidateQueries({
-        queryKey: [`room`],
-      });
-      toast({
-        title: "تم الحذف",
-        description: "تم حذف الغرفة بنجاح",
-      });
+      try {
+        await axiosInstance.delete(`/rooms/${id}`);
+        queryClient.invalidateQueries({
+          queryKey: [`room`],
+        });
+        toast({
+          title: "تم الحذف بنجاح",
+          description: "تم حذف الغرفة بنجاح",
+        });
+      } catch (error) {
+        toast({
+          title: "خطأ",
+          description: "حدث خطأ أثناء حذف الغرفة",
+          variant: "destructive",
+        });
+      }
     }
   };
+
+  const handleEdit = async (room: any) => {
+    // Find type ID from room type name
+    const selectedTypeId = dataa.find((x) => x.name === room.roomTypeName)?.id;
+
+    // Reset form with room data
+    reset({
+      roomTypeId: selectedTypeId ?? "",
+      roomStatus: room.status,
+    });
+
+    // Set component state
+    setRoomId(room.id);
+    setEditModel(true);
+    setIsDialogOpen(true);
+  };
+
   const onSubmit = async (data: RoomFormData) => {
-    if (editModel) {
-      await axiosInstance.put("/rooms", data);
+    try {
+      if (editModel) {
+        await axiosInstance.put(`/rooms/${roomId}`, data);
+        toast({
+          title: "تم التحديث بنجاح",
+          description: "تم تحديث بيانات الغرفة بنجاح",
+        });
+      } else {
+        await axiosInstance.post("/rooms", data);
+        toast({
+          title: "تم الإضافة بنجاح",
+          description: "تم إضافة الغرفة الجديدة بنجاح",
+        });
+      }
       queryClient.invalidateQueries({
         queryKey: [`room`],
       });
+      setIsDialogOpen(false);
+      reset();
+    } catch (error) {
       toast({
-        title: "تم التحديث",
-        description: "تم تحديث الغرفة بنجاح",
-      });
-    } else {
-      await axiosInstance.post("/rooms", data);
-      queryClient.invalidateQueries({
-        queryKey: [`room`],
-      });
-      toast({
-        title: "تم الإضافة",
-        description: "تم إضافة الغرفة بنجاح",
+        title: "خطأ",
+        description: "حدث خطأ أثناء حفظ البيانات",
+        variant: "destructive",
       });
     }
   };
+
   const groupedRooms = rooms?.reduce((acc, room) => {
     if (!acc[room.floor]) {
       acc[room.floor] = [];
@@ -100,6 +133,7 @@ export default function AdminRoomsPage() {
     acc[room.floor].push(room);
     return acc;
   }, {} as Record<number, typeof rooms>);
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -115,6 +149,10 @@ export default function AdminRoomsPage() {
               <Button
                 onClick={() => {
                   setEditModel(false);
+                  reset({
+                    roomTypeId: "",
+                    roomStatus: "Available",
+                  });
                 }}
                 className="bg-amber-600 hover:bg-amber-700"
               >
@@ -134,66 +172,71 @@ export default function AdminRoomsPage() {
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                {/* 1️⃣ Room Type */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="roomTypeId">نوع الغرفة</Label>
-                    <Controller
-                      control={control}
-                      name="roomTypeId"
-                      rules={{ required: "يجب اختيار نوع الغرفة" }}
-                      render={({ field }) => (
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="اختر نوع الغرفة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {roomtype?.map((type) => (
-                              <SelectItem key={type.id} value={type.id}>
-                                {type.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
-                    {errors.roomTypeId && (
-                      <span className="text-red-500 text-sm">
-                        {errors.roomTypeId.message}
-                      </span>
+                {/* Room Type */}
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="roomTypeId">نوع الغرفة</Label>
+                  <Controller
+                    control={control}
+                    name="roomTypeId"
+                    rules={{ required: "يجب اختيار نوع الغرفة" }}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="اختر نوع الغرفة" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {roomtype?.map((type) => (
+                            <SelectItem key={type.id} value={type.id}>
+                              {type.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     )}
-                  </div>
-
-                  {/* 2️⃣ MultiSelect field */}
-                  <div className="flex flex-col gap-2">
-                    <Label>الخدمات</Label>
-                    <Controller
-                      control={control}
-                      name="amenitiesIds"
-                      rules={{ required: "يجب اختيار خدمة واحدة على الأقل" }}
-                      render={({ field }) => (
-                        <MultiSelect
-                          onChange={(val) => field.onChange(val)}
-                          options={amanityData.map((a) => ({
-                            label: a.name,
-                            value: a.id,
-                          }))}
-                          value={field.value}
-                        />
-                      )}
-                    />
-                    {errors.amenitiesIds && (
-                      <span className="text-red-500 text-sm">
-                        {errors.amenitiesIds.message}
-                      </span>
-                    )}
-                  </div>
+                  />
+                  {errors.roomTypeId && (
+                    <span className="text-red-500 text-sm">
+                      {errors.roomTypeId.message}
+                    </span>
+                  )}
                 </div>
 
-                {/* 3️⃣ Action buttons */}
+                {/* Room Status */}
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="roomStatus">الحالة</Label>
+                  <Controller
+                    control={control}
+                    name="roomStatus"
+                    rules={{ required: "يجب اختيار الحالة" }}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="اختر الحالة" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {StatusOptions?.map((status) => (
+                            <SelectItem key={status} value={status}>
+                              {getStatusText(status)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.roomStatus && (
+                    <span className="text-red-500 text-sm">
+                      {errors.roomStatus.message}
+                    </span>
+                  )}
+                </div>
+
+                {/* Action buttons */}
                 <div className="flex justify-end gap-3 pt-4 border-t border-border">
                   <Button
                     type="button"
@@ -218,7 +261,7 @@ export default function AdminRoomsPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
+        <div className="grid md:grid-cols-5 gap-4 mb-8">
           <Card className="border-slate-200 bg-white">
             <CardContent className="pt-6">
               <div className="text-2xl font-bold text-slate-900">
@@ -233,6 +276,14 @@ export default function AdminRoomsPage() {
                 {rooms?.filter((r) => r.status === "Available").length}
               </div>
               <div className="text-sm text-slate-600">متاحة</div>
+            </CardContent>
+          </Card>
+          <Card className="border-slate-200 bg-white">
+            <CardContent className="pt-6">
+              <div className="text-2xl font-bold text-slate-600">
+                {rooms?.filter((r) => r.status === "UnderMaintenance").length}
+              </div>
+              <div className="text-sm text-slate-600">تحت الصيانة</div>
             </CardContent>
           </Card>
           <Card className="border-slate-200 bg-white">
@@ -275,12 +326,12 @@ export default function AdminRoomsPage() {
                               غرفة {room.number}
                             </div>
                             <div className="text-sm text-slate-600">
-                              {room.roomTypeId}
+                              {room.roomTypeName}
                             </div>
                           </div>
-                          {/* <Badge className={getStatusColor(room.status)}>
+                          <Badge className={getStatusColor(room.status)}>
                             {getStatusText(room.status)}
-                          </Badge> */}
+                          </Badge>
                         </div>
 
                         <div className="flex gap-2 mt-4">
@@ -288,7 +339,7 @@ export default function AdminRoomsPage() {
                             size="sm"
                             variant="outline"
                             className="flex-1 bg-transparent"
-                            // onClick={() => handleEdit(room)}
+                            onClick={() => handleEdit(room)}
                           >
                             <Edit className="w-3 h-3 ml-1" />
                             تعديل

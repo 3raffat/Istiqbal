@@ -1,5 +1,6 @@
 import type {
   AmenityResponse,
+  GuestResponse,
   RoomsResponse,
   RoomTypeResponse,
 } from "../lib/types";
@@ -20,4 +21,10 @@ export const useRoomtype = () =>
   useAuthQuery<RoomTypeResponse>({
     queryKey: ["Roomtype"],
     url: "/room-types",
+  });
+
+export const useGuest = () =>
+  useAuthQuery<GuestResponse>({
+    queryKey: ["Guest"],
+    url: "/guests",
   });
