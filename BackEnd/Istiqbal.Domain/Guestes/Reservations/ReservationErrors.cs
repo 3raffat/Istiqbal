@@ -47,6 +47,18 @@ namespace Istiqbal.Domain.Guestes.Reservations
         public static Error ReservationFeedbackIsExist => Error.Conflict(
             code: "Reservation.Feedback.IsExist",
             description: "This reservation already has feedback."
-        );  
+        );
+
+        public static  Error ReservationNotFoundForGuest = Error.NotFound(
+            code: "Reservation.NotFoundForGuest",
+            description: "The reservation was not found for the specified guest");
+
+        public static readonly Error AlreadyCancelled = Error.Conflict(
+            code: "Reservation.AlreadyCancelled",
+            description: "The reservation is already cancelled");
+
+        public static readonly Error CancellationTooLate = Error.Conflict(
+            code: "Reservation.CancellationTooLate",
+            description: "Cannot cancel reservation within 24 hours of check-in date");
     }
 }

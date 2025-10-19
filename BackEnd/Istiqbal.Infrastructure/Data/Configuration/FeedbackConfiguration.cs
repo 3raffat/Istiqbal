@@ -26,10 +26,7 @@ namespace Istiqbal.Infrastructure.Data.Configuration
                 .IsRequired()
                 .HasConversion<string>();
 
-            builder.HasOne(f => f.Reservation)
-                .WithMany(r => r.Feedbacks)
-                .HasForeignKey(f => f.ReservationId)
-                .OnDelete(DeleteBehavior.Cascade);
+           
 
         }
     }

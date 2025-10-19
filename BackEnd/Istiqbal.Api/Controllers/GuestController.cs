@@ -2,9 +2,12 @@
 using Istiqbal.Api.Extension;
 using Istiqbal.Application.Featuers.Guest.Commands.CreateGuest;
 using Istiqbal.Application.Featuers.Guest.Commands.DeleteGuest;
+using Istiqbal.Application.Featuers.Guest.Commands.DeleteGuestReservation;
 using Istiqbal.Application.Featuers.Guest.Commands.UpdateGuest;
+using Istiqbal.Application.Featuers.Guest.Commands.UpdateGuestReservation;
 using Istiqbal.Application.Featuers.Guest.Queries;
 using Istiqbal.Contracts.Requests.Guests;
+using Istiqbal.Contracts.Requests.Reservation;
 using Istiqbal.Contracts.Responses;
 using Istiqbal.Domain.Auth;
 using Istiqbal.Domain.Common.Results;
@@ -86,6 +89,30 @@ namespace Istiqbal.Api.Controllers
 
             return result.ToErrorActionResult<Deleted>(this);
         }
+        [HttpDelete("{guestId:guid}/reservations/{reservationId:guid}")]
+        public async Task<IActionResult> Cancle(Guid guestId,Guid reservationId, CancellationToken cancellationToken)
+        {
+            var result = await _sender.Send(
+                new CancelGuestReservationCommand(guestId,reservationId)
+                , cancellationToken);
 
+            return result.ToActionResult(this, "Reservation Cancelled successfully");
+        }
+
+        [HttpPut("{guestId:guid}/reservations/{reservationId:guid}")]
+        public async Task<IActionResult> Update(Guid guestId, Guid reservationId, UpdateReservationRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _sender.Send(
+                new UpdateGuestReservationCommand(
+                    guestId,
+                    reservationId,
+                    request.roomId,
+                    request.CheckInDate,
+                    request.CheckOutDate,
+                    request.Status)
+                , cancellationToken);
+
+            return result.ToActionResult(this, "Reservation guest updated successfully");
+        }
     }
 }

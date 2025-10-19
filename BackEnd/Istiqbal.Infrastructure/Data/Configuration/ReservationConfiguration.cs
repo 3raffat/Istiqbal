@@ -14,8 +14,6 @@ namespace Istiqbal.Infrastructure.Data.Configuration
                  .HasColumnType("decimal(18,2)")
                  .IsRequired();
 
-            builder.Property(x => x.NumberOfGuests)
-                .IsRequired();
 
             builder.Property(x => x.Status)
                 .HasConversion<string>()
@@ -27,8 +25,7 @@ namespace Istiqbal.Infrastructure.Data.Configuration
             builder.Property(x => x.CheckOutDate)
                 .IsRequired();
 
-            builder.Property(x => x.MaxOccupancy)
-                .IsRequired();
+          
 
 
         }

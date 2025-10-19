@@ -1,4 +1,6 @@
 ﻿using Istiqbal.Application.Featuers.Guest.Dtos;
+using Istiqbal.Application.Featuers.Reservations.Mapper;
+using Istiqbal.Domain.Guestes.Reservations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +19,8 @@ namespace Istiqbal.Application.Featuers.Guest.Mapper
                 Id: guest.Id,
                 fullName: guest.FullName,
                 email: guest.Email,
-                phone: guest.Phone
+                phone: guest.Phone,
+                Reservations: guest.Reservation.Select(x => x.toDto()).ToList()
             );
         }
 

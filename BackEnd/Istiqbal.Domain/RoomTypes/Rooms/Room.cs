@@ -12,7 +12,7 @@ namespace Istiqbal.Domain.RoomTypes.Rooms
         public Guid RoomTypeId { get; private set; }
         public RoomType Type { get; private set; } = null!;
         public int Floor { get;  }
-        public RoomStatus Status { get; private set; } 
+        public RoomStatus  Status { get; private set; } 
         private readonly List<Reservation> _reservation = new();
         public IEnumerable<Reservation> Reservation => _reservation.AsReadOnly();
   

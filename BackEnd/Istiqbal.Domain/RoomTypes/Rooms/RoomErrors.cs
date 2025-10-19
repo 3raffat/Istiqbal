@@ -33,5 +33,10 @@ namespace Istiqbal.Domain.RoomTypes.Rooms
             code: "Room.RoomAmenity.NotFound",
             description: "The room does not have this amenity."
         );
+
+        public static Error RoomNotFound => Error.NotFound(
+            code: "Room.Room.NotFound",
+            description: "Room not found."
+            );
     }
 }

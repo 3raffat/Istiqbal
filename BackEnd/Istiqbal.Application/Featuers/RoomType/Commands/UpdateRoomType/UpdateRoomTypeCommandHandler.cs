@@ -21,7 +21,7 @@ namespace Istiqbal.Application.Featuers.RoomTypes.Commands.UpdateRoomType
     {
         public async Task<Result<Updated>> Handle(UpdateRoomTypeCommand request, CancellationToken cancellationToken)
         {
-            var roomType = await _context.RoomTypes.
+            var roomType = await _context.RoomTypes.Include(x=>x.Amenities).
                 FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             if (roomType is null)
