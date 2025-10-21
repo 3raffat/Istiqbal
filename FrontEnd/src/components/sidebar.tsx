@@ -1,25 +1,8 @@
-import {
-  LayoutDashboard,
-  Bed,
-  Calendar,
-  Users,
-  CreditCard,
-  Settings,
-  Hotel,
-  LogOut,
-} from "lucide-react";
+import { Hotel, LogOut } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "../lib/utils";
-
-const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Rooms", href: "/rooms", icon: Bed },
-  { name: "Reservations", href: "/reservations", icon: Calendar },
-  { name: "Guests", href: "/guests", icon: Users },
-  { name: "Payments", href: "/payments", icon: CreditCard },
-  { name: "Settings", href: "/settings", icon: Settings },
-];
+import { navigation } from "../Routes/route";
 
 export function Sidebar() {
   const pathname = useLocation().pathname;
@@ -39,11 +22,11 @@ export function Sidebar() {
       </div>
       <nav className="flex-1 space-y-1 p-4">
         {navigation.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive = pathname === item.to;
           return (
             <Link
               key={item.name}
-              to={item.href}
+              to={item.to}
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                 isActive

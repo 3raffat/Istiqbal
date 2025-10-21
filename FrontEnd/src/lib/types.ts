@@ -1,84 +1,55 @@
-export interface RoomType {
-  id: string;
+export interface CreateRoomTypeRequest {
   name: string;
   description: string;
-  basePrice: number;
-  capacity: number;
-  amenities: string[];
-}
-
-export interface Amenity {
-  id: string;
-  name: string;
-  icon: string;
-  category: "room" | "hotel";
+  pricePerNight: number;
+  maxOccupancy: number;
+  amenitieIds: string[];
 }
 
 export interface Guest {
-  id: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
-  phone: string;
-  nationality: string;
-  idNumber: string;
 }
 
-export interface Reservation {
-  id: string;
+export interface CreateReservationRequest {
   guestId: string;
   roomId: string;
-  checkIn: string;
-  checkOut: string;
-  status: "pending" | "confirmed" | "checked-in" | "checked-out" | "cancelled";
-  totalPrice: number;
-  specialRequests?: string;
-  createdAt: string;
+  checkInDate: string;
+  checkOutDate: string;
 }
 
-export interface Payment {
-  id: string;
-  reservationId: string;
-  amount: number;
-  method: "cash" | "card" | "transfer";
-  status: "pending" | "completed" | "refunded";
-  transactionDate: string;
+export interface AmenityResponse {
+  data: {
+    id: string;
+    name: string;
+  }[];
+  status: number;
+  message: string;
 }
 
-export interface Feedback {
-  id: string;
-  reservationId: string;
-  guestId: string;
-  rating: number;
-  comment: string;
-  category: "cleanliness" | "service" | "location" | "value" | "overall";
-  createdAt: string;
-}
 export interface RoomsResponse {
   data: {
     id: string;
     number: number;
     roomTypeName: string;
     floor: number;
-    status: string;
+    status: "Available" | "Booked" | "Maintenance" | string;
     amountPerNight: number;
-    amenities: {
-      id: string;
-      name: string;
-    }[];
   }[];
-  success: boolean;
+  status: number;
   message: string;
-  timestamp: string;
 }
-export interface AmenityResponse {
-  data: {
+
+export interface RoomType {
+  id: string;
+  name: string;
+  description: string;
+  pricePerNight: number;
+  maxOccupancy: number;
+  amenities: {
     id: string;
     name: string;
   }[];
-  success: boolean;
-  message: string;
-  timestamp: string;
 }
 export interface RoomTypeResponse {
   data: {
@@ -87,19 +58,13 @@ export interface RoomTypeResponse {
     description: string;
     pricePerNight: number;
     maxOccupancy: number;
+    amenities: {
+      id: string;
+      name: string;
+    }[];
   }[];
-  success: boolean;
+  status: number;
   message: string;
-  timestamp: string; // or Date if you convert it
-}
-
-export interface Room {
-  id: string;
-  number: number;
-  roomTypeName: string;
-  floor: number;
-  status: string; // extend as needed
-  amountPerNight: number;
 }
 
 export type status = "Available" | "Occupied" | "UnderMaintenance" | "Cleaning";
@@ -109,14 +74,61 @@ export const StatusOptions = [
   "UnderMaintenance",
   "Cleaning",
 ];
-export interface GuestResponse {
+export interface GuestReservationsResponse {
   data: {
     id: string;
     fullName: string;
     email: string;
     phone: string;
+    reservations: {
+      reservationId: string;
+      guestFullName: string;
+      roomtype: string;
+      roomNumber: number;
+      amount: number;
+      checkInDate: string;
+      checkOutDate: string;
+      status: string;
+    }[];
   }[];
-  success: boolean;
+  status: number;
   message: string;
-  timestamp: string;
+}
+
+export interface ReservationResponse {
+  reservationId: string;
+  guestFullName: string;
+  roomtype: string;
+  roomNumber: number;
+  checkInDate: string;
+  checkOutDate: string;
+  status: string;
+}
+export type ReservationFormData = {
+  guestId: string;
+  roomId: string;
+  checkInDate: string;
+  checkOutDate: string;
+  status?: string;
+};
+export interface ReservationsResponse {
+  data: {
+    reservationId: string;
+    guestFullName: string;
+    roomtype: string;
+    roomNumber: number;
+    amount: number;
+    checkInDate: string;
+    checkOutDate: string;
+    status: "Pending" | "Confirmed" | "Cancelled" | string;
+  }[];
+  status: number;
+  message: string;
+}
+
+export interface Guest {
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string;
 }

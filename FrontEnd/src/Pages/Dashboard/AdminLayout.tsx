@@ -2,18 +2,15 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Hotel, LogOut } from "lucide-react";
 import { navigation } from "../../Routes/route";
+import { logout } from "../../lib/jwt";
 
 export default function AdminLayout() {
   const pathname = useLocation().pathname;
   const router = useNavigate();
-  //   const user = getAdminUser();
-
-  //   const handleLogout = () => {
-  //     logout();
-  //     router.push("/admin/login");
-  //   };
-
-  // Don't apply guard to login page
+  const handleLogout = () => {
+    logout();
+    router("/login");
+  };
 
   return (
     <div className="min-h-screen bg-slate-50" dir="rtl">
@@ -53,13 +50,8 @@ export default function AdminLayout() {
 
         {/* User Info & Logout */}
         <div className="absolute bottom-6 left-6 right-6">
-          <div className="p-4 rounded-lg bg-slate-800 mb-3">
-            <p className="text-sm text-slate-400 mb-1">مسجل الدخول</p>
-            <p className="font-medium">{"name"}</p>
-            <p className="text-xs text-slate-500">@{"username"}</p>
-          </div>
           <Button
-            //   onClick={handleLogout}
+            onClick={handleLogout}
             variant="outline"
             className="w-full border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white bg-transparent"
           >

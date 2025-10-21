@@ -31,6 +31,7 @@ import axiosInstance from "../../config/config";
 import { useQueryClient } from "@tanstack/react-query";
 import { getStatusColor, getStatusText } from "../../Data/data";
 import { StatusOptions, type status } from "../../lib/types";
+import { getToken } from "../../lib/jwt";
 
 type RoomFormData = {
   roomTypeId: string;
@@ -47,7 +48,7 @@ export default function AdminRoomsPage() {
   const rooms = data.data?.data ?? [];
   const types = useRoomtype();
   const dataa = types.data?.data ?? [];
-
+  const token = getToken();
   const roomtype = dataa?.map((x) => ({
     id: x.id,
     name: x.name,
@@ -63,7 +64,11 @@ export default function AdminRoomsPage() {
   const HandelDelete = async (id: string) => {
     if (confirm("هل أنت متأكد من حذف هذه الغرفة؟")) {
       try {
-        await axiosInstance.delete(`/rooms/${id}`);
+        await axiosInstance.delete(`/rooms/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         queryClient.invalidateQueries({
           queryKey: [`room`],
         });
@@ -100,13 +105,21 @@ export default function AdminRoomsPage() {
   const onSubmit = async (data: RoomFormData) => {
     try {
       if (editModel) {
-        await axiosInstance.put(`/rooms/${roomId}`, data);
+        await axiosInstance.put(`/rooms/${roomId}`, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         toast({
           title: "تم التحديث بنجاح",
           description: "تم تحديث بيانات الغرفة بنجاح",
         });
       } else {
-        await axiosInstance.post("/rooms", data);
+        await axiosInstance.post("/rooms", data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         toast({
           title: "تم الإضافة بنجاح",
           description: "تم إضافة الغرفة الجديدة بنجاح",

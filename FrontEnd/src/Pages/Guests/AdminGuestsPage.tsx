@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Users, Search, Mail, Phone } from "lucide-react";
+import { useState } from "react";
+import { Users, Mail, Phone } from "lucide-react";
 import { useForm } from "react-hook-form";
 import {
   Dialog,
@@ -17,6 +17,7 @@ import { Badge } from "../../components/ui/badge";
 import { useGuest } from "../../apis/data";
 import axiosInstance from "../../config/config";
 import { useQueryClient } from "@tanstack/react-query";
+import { getToken } from "../../lib/jwt";
 
 type GuestFormData = {
   fullName: string;
@@ -25,15 +26,15 @@ type GuestFormData = {
 };
 
 export default function AdminGuestsPage() {
-  const [guests, setGuests] = useState<[]>([]);
   const [guestId, setGuestId] = useState();
-  const [reservations, setReservations] = useState<[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingGuest, setEditingGuest] = useState<boolean>(false);
+  const [editingGuest, setEditingGuest] = useState<object | null>(null);
   const guest = useGuest();
   const queryClient = useQueryClient();
   const guestsData = guest.data?.data ?? [];
+  const reservation = guestsData.flatMap((x) => x.reservations);
+  var token = getToken();
+
   const {
     register,
     handleSubmit,
@@ -43,22 +44,29 @@ export default function AdminGuestsPage() {
   } = useForm<GuestFormData>();
 
   const onSubmit = async (data: GuestFormData) => {
-    console.log(data);
     if (editingGuest) {
-      await axiosInstance.put(`/guests/${guestId}`, data);
+      await axiosInstance.put(`/guests/${guestId}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } else {
-      await axiosInstance.post("/guests", data);
+      await axiosInstance.post("/guests", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     }
     queryClient.invalidateQueries({
       queryKey: [`Guest`],
     });
     setIsDialogOpen(false);
     reset();
-    setEditingGuest(false);
+    setEditingGuest(null);
   };
 
   const handleEdit = (guest: any) => {
-    setEditingGuest(true);
+    setEditingGuest(guest);
     setGuestId(guest.id);
     setValue("fullName", guest.fullName);
     setValue("email", guest.email);
@@ -67,21 +75,10 @@ export default function AdminGuestsPage() {
   };
 
   const handleAddNew = () => {
-    setEditingGuest(false);
+    setEditingGuest(null);
     reset();
     setIsDialogOpen(true);
   };
-
-  //   const getGuestReservations = (guestId: string) => {
-  //     return reservations.filter((r) => r.guestId === guestId);
-  //   };
-
-  const filteredGuests = guestsData.filter(
-    (guest) =>
-      guest.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      guest.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      guest.phone.includes(searchQuery)
-  );
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -172,7 +169,7 @@ export default function AdminGuestsPage() {
                     onClick={() => {
                       setIsDialogOpen(false);
                       reset();
-                      //   setEditingGuest(null);
+                      setEditingGuest(null);
                     }}
                   >
                     إلغاء
@@ -181,7 +178,7 @@ export default function AdminGuestsPage() {
                     type="submit"
                     className="bg-amber-600 hover:bg-amber-700"
                   >
-                    {/* {editingGuest ? "تحديث" : "إضافة"} */}
+                    {editingGuest ? "تحديث" : "إضافة"}
                   </Button>
                 </div>
               </form>
@@ -190,7 +187,7 @@ export default function AdminGuestsPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid md:grid-cols-3 gap-4 mb-8">
+        <div className="grid md:grid-cols-2 gap-4 mb-8">
           <Card className="border-slate-200 bg-white">
             <CardContent className="pt-6">
               <div className="text-2xl font-bold text-slate-900">
@@ -201,50 +198,16 @@ export default function AdminGuestsPage() {
           </Card>
           <Card className="border-slate-200 bg-white">
             <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-green-600">
-                {/* {
-                  guests.filter((g) =>
-                    getGuestReservations(g.id).some(
-                      (r) => r.status === "checked-in"
-                    )
-                  ).length
-                } */}
+              <div className="text-2xl font-bold text-blue-600">
+                {reservation.length}
               </div>
-              <div className="text-sm text-slate-600">نزلاء حاليون</div>
-            </CardContent>
-          </Card>
-          <Card className="border-slate-200 bg-white">
-            <CardContent className="pt-6">
-              {/* <div className="text-2xl font-bold text-blue-600">
-                {reservations.length}
-              </div> */}
               <div className="text-sm text-slate-600">إجمالي الحجوزات</div>
             </CardContent>
           </Card>
         </div>
-
-        {/* Search */}
-        <Card className="border-slate-200 bg-white mb-6">
-          <CardContent className="pt-6">
-            <div className="relative">
-              <Search className="absolute right-3 top-3 w-4 h-4 text-slate-400" />
-              <Input
-                placeholder="البحث عن نزيل..."
-                className="pr-10"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Guests List */}
         <div className="space-y-4">
-          {filteredGuests.map((guest) => {
-            // const guestReservations = getGuestReservations(guest.id);
-            // const activeReservation = guestReservations.find(
-            //   (r) => r.status === "checked-in"
-            // );
+          {guestsData.map((guest) => {
             return (
               <Card
                 key={guest.id}
@@ -261,11 +224,11 @@ export default function AdminGuestsPage() {
                           <h3 className="text-lg font-bold text-slate-900">
                             {guest.fullName}
                           </h3>
-                          {/* {activeReservation && (
+                          {guest.reservations.length > 0 && (
                             <Badge className="bg-green-100 text-green-700">
                               نزيل حالي
                             </Badge>
-                          )} */}
+                          )}
                         </div>
                       </div>
 
@@ -286,17 +249,17 @@ export default function AdminGuestsPage() {
                         </div>
                         <div className="flex gap-4 text-sm">
                           <span>
-                            {/* <span className="font-medium text-slate-900">
-                              {guestReservations.length}
-                            </span>{" "} */}
+                            <span className="font-medium text-slate-900">
+                              {guest.reservations.length}{" "}
+                            </span>
                             حجز
                           </span>
                           <span>
                             <span className="font-medium text-slate-900">
-                              {/* {guestReservations.reduce(
-                                (sum, r) => sum + r.totalPrice,
+                              {guest.reservations.reduce(
+                                (sum, r) => sum + r.amount,
                                 0
-                              )} */}
+                              )}
                             </span>{" "}
                             $
                           </span>
@@ -308,7 +271,10 @@ export default function AdminGuestsPage() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => handleEdit(guest)}
+                        onClick={() => {
+                          setEditingGuest(guest);
+                          handleEdit(guest);
+                        }}
                       >
                         تعديل
                       </Button>
