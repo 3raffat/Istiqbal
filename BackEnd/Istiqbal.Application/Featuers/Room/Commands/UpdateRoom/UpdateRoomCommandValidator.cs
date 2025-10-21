@@ -7,13 +7,13 @@ namespace Istiqbal.Application.Featuers.Room.Commands.UpdateRoom
         public UpdateRoomCommandValidator() 
         { 
          
-            RuleFor(x => x.id)
+            RuleFor(x => x.Id)
                 .NotEmpty().WithMessage("Room ID is required.");
 
-            RuleFor(x => x.roomTypeId)
+            RuleFor(x => x.RoomTypeId)
                 .NotEmpty().WithMessage("Room Type ID is required.");
 
-            RuleFor(x => x.roomStatus)
+            RuleFor(x => x.RoomStatus)
                 .IsInEnum()
                 .WithMessage("Room Status must be a valid value .");
 

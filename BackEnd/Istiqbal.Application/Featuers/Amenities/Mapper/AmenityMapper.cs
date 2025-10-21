@@ -13,8 +13,8 @@ namespace Istiqbal.Application.Featuers.Amenity.Mapper
         public static AmenityDto toDto (this Domain.Amenities.Amenity amenity)
         {
             return new AmenityDto(
-                id: amenity.Id,
-                name:amenity.Name
+                Id: amenity.Id,
+                Name:amenity.Name
                 );
         }
         public static List<AmenityDto> toDtos(this IEnumerable< Domain.Amenities.Amenity> amenity)

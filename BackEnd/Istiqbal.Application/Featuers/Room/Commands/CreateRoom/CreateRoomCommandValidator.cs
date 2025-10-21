@@ -11,9 +11,11 @@ namespace Istiqbal.Application.Featuers.Room.Commands.CreateRoom
     {
         public CreateRoomCommandValidator()
         {
-           RuleFor(x=>x.roomTypeId)
-                .NotEmpty()
-                .WithMessage("Room Type Id is required");
+            RuleFor(x => x.RoomTypeId)
+            .NotEmpty().WithMessage("RoomTypeId cannot be empty.");
+
+            RuleFor(x => x.RoomStatus)
+                .IsInEnum().WithMessage("Invalid room status.");
 
         }
     }

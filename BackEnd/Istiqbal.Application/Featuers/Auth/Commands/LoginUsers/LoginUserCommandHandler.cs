@@ -15,7 +15,7 @@ namespace Istiqbal.Application.Featuers.Auth.Commands.LoginUsers
        
         public async Task<Result<LoginUserDto>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            return await _userService.LoginUser(request.email,request.password);
+            return await _userService.LoginUser(request.Email,request.Password);
         }
     }
 }

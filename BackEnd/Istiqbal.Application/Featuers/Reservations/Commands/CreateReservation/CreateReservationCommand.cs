@@ -7,9 +7,9 @@ using static Istiqbal.Contracts.Requests.Reservation.CreateReservationRequest;
 
 namespace Istiqbal.Application.Featuers.Reservations.Commands.CreateReservation
 {
-    public record CreateReservationCommand(
+    public sealed record CreateReservationCommand(
         Guid GuestId,
-        Guid roomId,
+        Guid RoomId,
         DateTimeOffset CheckInDate,
         DateTimeOffset CheckOutDate 
        ):IRequest<Result<ReservationDto>>;

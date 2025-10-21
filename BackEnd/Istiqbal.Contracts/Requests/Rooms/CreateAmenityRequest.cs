@@ -8,7 +8,7 @@ namespace Istiqbal.Contracts.Requests.Rooms
 {
     public sealed class CreateAmenityRequest
     {
-        public Guid id { get; set; }
-        public string name { get; set; } = string.Empty;
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }

@@ -8,7 +8,7 @@ namespace Istiqbal.Contracts.Requests.Amenity
 {
     public sealed class UpdateAmenityRequest
     {
-        public string name { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿
 
+using Istiqbal.Application.Common.Caching;
 using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.RoomType.Dtos;
 using Istiqbal.Application.Featuers.RoomType.Mappers;
@@ -22,7 +23,7 @@ namespace Istiqbal.Application.Featuers.RoomTypes.Commands.CreateRoomType
             var roomName = request.Name.Trim().ToLower();
 
             var exists = await _context.RoomTypes
-                .AnyAsync(x => x.Name == roomName, cancellationToken);
+                .AnyAsync(x => x.Name.ToLower() == roomName, cancellationToken);
 
             if (exists)
             {
@@ -31,19 +32,8 @@ namespace Istiqbal.Application.Featuers.RoomTypes.Commands.CreateRoomType
                 return RoomTypeErrors.RoomTypeNameAlreadyExists;
             }
 
-            List<Domain.Amenities.Amenity> amenities = new();
+            var amenities = await _context.Amenities.Where(x=>request.AmenitieIds.Contains(x.Id)).ToListAsync(cancellationToken);
 
-            foreach (var amenityId in request.AmenitieIds)
-            {
-                var amenity = await _context.Amenities.FirstOrDefaultAsync(x=>x.Id== amenityId, cancellationToken);
-                if (amenity is null) 
-                {
-                    _logger.LogWarning("Amenity with ID {Id} not found ", amenityId);
-                    return AmenityErrors.AmenityIdNotFound;
-                }
-
-                amenities.Add(amenity);
-            }
             var roomTypeResult = Istiqbal.Domain.RoomTypes.RoomType
                 .Create(Guid.NewGuid(),
                 request.Name.Trim(),
@@ -59,7 +49,7 @@ namespace Istiqbal.Application.Featuers.RoomTypes.Commands.CreateRoomType
 
              await _context.SaveChangesAsync(cancellationToken);
 
-             await _cache.RemoveByTagAsync("roomType", cancellationToken);
+             await _cache.RemoveByTagAsync(CacheKeys.RoomType.All, cancellationToken);
 
             _logger.LogInformation("Room type with ID {RoomTypeId} created successfully.", roomTypeResult.Value.Id);
 

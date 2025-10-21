@@ -12,5 +12,7 @@ namespace Istiqbal.Application.Common.Interface
     {
         Task<Result<LoginUserDto>> LoginUser(string email, string password,CancellationToken cancellationToken= default);
         Task<Result<Success>> Register(string username,string email, string password,CancellationToken cancellationToken = default);
+        Task<Result<AppUserDto>> GetUserByIdAsync(string userId);
+
     }
 }

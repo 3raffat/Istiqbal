@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace Istiqbal.Application.Featuers.Amenities.Commands.DeleteAmenity
 {
-    public sealed record DeleteAmenityCommand(Guid id):IRequest<Result<Deleted>>;
+    public sealed record DeleteAmenityCommand(Guid Id):IRequest<Result<Deleted>>;
    
 }

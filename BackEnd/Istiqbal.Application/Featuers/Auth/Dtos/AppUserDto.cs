@@ -2,5 +2,5 @@
 
 namespace Istiqbal.Application.Featuers.Auth.Dtos
 {
-    public sealed record AppUserDto(string userId,string userEmail,IList<string>Roles,IList<Claim> Claims);
+    public sealed record AppUserDto(string UserId,string UserEmail,IList<string>Roles,IList<Claim> Claims);
 }

@@ -5,9 +5,9 @@ namespace Istiqbal.Application.Featuers.Amenity.Commands.CreateAmenity
     {
         public CreateAmenityCommandValidator()
         {
-            RuleFor(x => x.name)
-                .NotEmpty()
-                .MaximumLength(50);
+            RuleFor(x => x.Name)
+           .NotEmpty().WithMessage("The Name field cannot be empty.")
+           .MaximumLength(50).WithMessage("The Name field must not exceed 50 characters.");
         }
     }
 }

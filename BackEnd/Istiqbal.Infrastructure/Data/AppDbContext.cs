@@ -4,7 +4,6 @@ using Istiqbal.Domain.Auth;
 using Istiqbal.Domain.Common;
 using Istiqbal.Domain.Guestes;
 using Istiqbal.Domain.Guestes.Reservations;
-using Istiqbal.Domain.Guestes.Reservations.Feedbacks;
 using Istiqbal.Domain.Guestes.Reservations.Payments;
 using Istiqbal.Domain.RoomTypes;
 using Istiqbal.Domain.RoomTypes.Rooms;
@@ -38,8 +37,6 @@ namespace Istiqbal.Infrastructure.Data
         public DbSet<Room> Rooms => Set<Room>();
 
         public DbSet<RoomType> RoomTypes => Set<RoomType>();
-
-        public DbSet<Feedback> Feedbacks => Set<Feedback>();
 
         public DbSet<Guest> Guests => Set<Guest>();
 

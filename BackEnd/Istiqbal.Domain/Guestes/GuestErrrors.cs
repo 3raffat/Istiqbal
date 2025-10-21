@@ -9,7 +9,7 @@ namespace Istiqbal.Domain.Guestes
 {
     public static class GuestErrors
     {
- public static Error GuestNameRequired => Error.Validation(
+        public static Error GuestNameRequired => Error.Validation(
             code: "Guest.GuestName.Required",
             description: "Guest name cannot be empty."
         );
@@ -33,7 +33,7 @@ namespace Istiqbal.Domain.Guestes
             code: "Guest.GuestEmail.Invalid",
             description: "Guest email is invalid."
         );
-       public static Error InvalidPhoneNumber => Error.Validation(
+        public static Error InvalidPhoneNumber => Error.Validation(
             code: "Guest.GuestPhone.Invalid",
             description: "Guest phone number is invalid. It should be in the phone number format. Use + followed by country code and number (e.g., +962787654321)"
         );

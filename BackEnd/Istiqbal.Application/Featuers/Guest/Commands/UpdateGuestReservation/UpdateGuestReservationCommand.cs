@@ -8,8 +8,8 @@ namespace Istiqbal.Application.Featuers.Guest.Commands.UpdateGuestReservation
     public sealed record UpdateGuestReservationCommand(
         Guid GuestId,
         Guid ReservationId,
-        Guid roomId,
+        Guid RoomId,
         DateTimeOffset CheckInDate,
         DateTimeOffset CheckOutDate,
-        ReservationStatus Status):IRequest<Result<Updated>>;
+        ReservationStatus Status):IRequest<Result<ReservationDto>>;
 }

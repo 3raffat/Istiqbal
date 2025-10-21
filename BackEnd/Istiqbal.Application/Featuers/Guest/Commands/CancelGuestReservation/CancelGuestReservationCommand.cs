@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 
 namespace Istiqbal.Application.Featuers.Guest.Commands.DeleteGuestReservation
 {
-    public sealed record CancelGuestReservationCommand(Guid guestId , Guid reservationId):IRequest<Result<ReservationDto>>;
+    public sealed record CancelGuestReservationCommand(Guid GuestId , Guid ReservationId):IRequest<Result<ReservationDto>>;
    
 }

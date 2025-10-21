@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 
 namespace Istiqbal.Application.Featuers.Amenity.Commands.UpdateAmenity
 {
-    public sealed record UpdateAmenityCommand(Guid id , string name):IRequest<Result<AmenityDto>>;
+    public sealed record UpdateAmenityCommand(Guid Id , string Name):IRequest<Result<AmenityDto>>;
    
 }

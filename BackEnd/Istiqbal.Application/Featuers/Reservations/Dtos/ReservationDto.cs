@@ -8,11 +8,11 @@ using static Istiqbal.Contracts.Requests.Reservation.CreateReservationRequest;
 
 namespace Istiqbal.Application.Featuers.Reservations.Dtos
 {
-    public record  ReservationDto(
-        Guid reservationId,
-        string guestFullName,
-        string roomtype ,
-        int roomNumber,
+    public sealed record  ReservationDto(
+        Guid ReservationId,
+        string GuestFullName,
+        string Roomtype ,
+        int RoomNumber,
         decimal Amount,
         DateTimeOffset CheckInDate,
         DateTimeOffset CheckOutDate,

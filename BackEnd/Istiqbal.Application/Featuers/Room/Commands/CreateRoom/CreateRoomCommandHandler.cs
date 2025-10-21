@@ -1,5 +1,6 @@
 ﻿
 
+using Istiqbal.Application.Common.Caching;
 using Istiqbal.Application.Common.Errors;
 using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Room.Dtos;
@@ -22,17 +23,17 @@ namespace Istiqbal.Application.Featuers.Room.Commands.CreateRoom
         {
             var roomType = await _context.RoomTypes
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == request.roomTypeId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.RoomTypeId, cancellationToken);
 
 
             if (roomType is null)
             {
-                _logger.LogWarning("Room Type Not Found , RoomTypeId: {RoomTypeId}", request.roomTypeId);
+                _logger.LogWarning("Room Type Not Found , RoomTypeId: {RoomTypeId}", request.RoomTypeId);
 
                 return ApplicationErrors.RoomTypeNotFound;
             }
 
-            if (!Enum.IsDefined(request.roomStatus))
+            if (!Enum.IsDefined(request.RoomStatus))
                 return RoomErrors.RoomStatusInvalid;
 
             var lastRoom = await _context.Rooms
@@ -46,7 +47,7 @@ namespace Istiqbal.Application.Featuers.Room.Commands.CreateRoom
             List<Domain.Amenities.Amenity> amenities = new();
 
             var roomResult = Domain.RoomTypes.Rooms.
-                Room.Create(Guid.NewGuid(), request.roomTypeId, lastRoomNumber,request.roomStatus);
+                Room.Create(Guid.NewGuid(), request.RoomTypeId, lastRoomNumber,request.RoomStatus);
 
             if (roomResult.IsError)
                 return roomResult.Errors;
@@ -63,7 +64,7 @@ namespace Istiqbal.Application.Featuers.Room.Commands.CreateRoom
 
             _logger.LogInformation("Room Created Successfully , RoomId: {RoomId}", room.Id);
 
-            await _cache.RemoveByTagAsync("room", cancellationToken);
+            await _cache.RemoveByTagAsync(CacheKeys.Room.All, cancellationToken);
 
 
             return room.ToDto();

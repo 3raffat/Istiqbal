@@ -1,4 +1,5 @@
 using Istiqbal.Api;
+using Istiqbal.Api.Extension;
 using Istiqbal.Application;
 using Istiqbal.Infrastructure;
 using Istiqbal.Infrastructure.Data;
@@ -31,7 +32,12 @@ if (app.Environment.IsDevelopment())
     });
     await app.InitialiseDatabaseAsync();
 }
-
+using (var scope = app.Services.CreateScope())
+{
+    var httpContextAccessor = scope.ServiceProvider
+        .GetRequiredService<IHttpContextAccessor>();
+    ErrorExtensions.Initialize(httpContextAccessor);
+}
 app.UseCors();
 app.UseHttpsRedirection();
 

@@ -1,4 +1,5 @@
-﻿using Istiqbal.Application.Common.Interface;
+﻿using Istiqbal.Application.Common.Caching;
+using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Guest.Dtos;
 using Istiqbal.Application.Featuers.Guest.Mapper;
 using Istiqbal.Domain.Common.Results;
@@ -21,15 +22,16 @@ namespace Istiqbal.Application.Featuers.Guest.Commands.CreateGuest
             var guestEmail = request.Email.Trim();
 
             var existingGuest = await _context.Guests
-             .FirstOrDefaultAsync(x =>
-                 x.FullName == guestName ||
-                 x.Phone == guestPhone ||
-                 x.Email == guestEmail,
-                 cancellationToken);
+                .Select(x => new { x.FullName, x.Phone, x.Email })
+                .FirstOrDefaultAsync(x =>
+                    x.FullName.ToLower() == guestName.ToLower() ||
+                    x.Phone == guestPhone ||
+                    x.Email.ToLower() == guestEmail.ToLower(),
+                    cancellationToken);
 
             if (existingGuest is not null)
             {
-                if (existingGuest.FullName == guestName)
+                if (string.Equals(existingGuest.FullName, guestName, StringComparison.OrdinalIgnoreCase))
                 {
                     _logger.LogWarning("Guest with name {GuestName} already exists.", guestName);
                     return GuestErrors.GuestNameAlreadyExists;
@@ -39,16 +41,19 @@ namespace Istiqbal.Application.Featuers.Guest.Commands.CreateGuest
                     _logger.LogWarning("Guest with phone {GuestPhone} already exists.", guestPhone);
                     return GuestErrors.GuestPhoneAlreadyExists;
                 }
-                if (existingGuest.Email == guestEmail)
+                if (string.Equals(existingGuest.Email, guestEmail, StringComparison.OrdinalIgnoreCase))
                 {
                     _logger.LogWarning("Guest with email {GuestEmail} already exists.", guestEmail);
                     return GuestErrors.GuestEmailAlreadyExists;
                 }
             }
 
-            var guestResult = Domain.Guestes.Guest.Create(Guid.NewGuid(), guestName, guestPhone, guestEmail);
+            var guestResult = Domain.Guestes.Guest.Create(Guid.NewGuid(),
+                                                          guestName,
+                                                          guestPhone,
+                                                          guestEmail);
 
-            if(guestResult.IsError)
+            if (guestResult.IsError)
                 return guestResult.TopError;
 
             var guest = guestResult.Value;
@@ -59,7 +64,7 @@ namespace Istiqbal.Application.Featuers.Guest.Commands.CreateGuest
 
             _logger.LogInformation("Guest with ID {GuestId} created successfully.", guest.Id);
 
-            await _cache.RemoveByTagAsync("guest", cancellationToken);
+            await _cache.RemoveByTagAsync(CacheKeys.Guest.All, cancellationToken);
 
             return guest.toDto();
         }

@@ -14,11 +14,12 @@ using static Istiqbal.Contracts.Requests.Reservation.CreateReservationRequest;
 
 namespace Istiqbal.Application.Featuers.Guest.Queries
 {
-    internal class GetGuestQueryHandler(IAppDbContext _context) : IRequestHandler<GetGuestQuery,Result<List<GuestDto>>>
+    public sealed class GetGuestQueryHandler(IAppDbContext _context) : IRequestHandler<GetGuestQuery,Result<List<GuestDto>>>
     {
         public async Task <Result<List<GuestDto>>> Handle(GetGuestQuery request, CancellationToken cancellationToken)
         {
            var guests = await _context.Guests.
+                Where(x=>!x.IsDeleted).
                 Include(x=>x.Reservation.Where(x=>x.Status!= ReservationStatus.Cancelled)).
                 ThenInclude(x=>x.Room).
                 ThenInclude(x=>x.Type).AsNoTracking().ToListAsync(cancellationToken);

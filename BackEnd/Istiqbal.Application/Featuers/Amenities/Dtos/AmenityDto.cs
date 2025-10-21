@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Istiqbal.Application.Featuers.Amenity.Dtos
 {
-    public sealed record AmenityDto(Guid id ,string name);
+    public sealed record AmenityDto(Guid Id ,string Name);
    
 }

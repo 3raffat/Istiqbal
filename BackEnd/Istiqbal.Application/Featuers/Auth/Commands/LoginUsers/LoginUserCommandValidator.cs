@@ -11,11 +11,12 @@ namespace Istiqbal.Application.Featuers.Auth.Commands.LoginUsers
     {
         public LoginUserCommandValidator()
         {
-            RuleFor(x=>x.email)
-                .NotEmpty();
+            RuleFor(x => x.Email)
+                      .NotEmpty().WithMessage("Email cannot be empty.")
+                      .EmailAddress().WithMessage("Email is not valid."); 
 
-            RuleFor(x=>x.password)
-                .NotEmpty();
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage("Password cannot be empty.");
         }
     }
 }

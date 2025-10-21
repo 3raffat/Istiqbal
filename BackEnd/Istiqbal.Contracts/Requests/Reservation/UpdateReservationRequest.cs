@@ -9,7 +9,7 @@ namespace Istiqbal.Contracts.Requests.Reservation
 {
     public sealed class UpdateReservationRequest
     {
-        public Guid roomId { get; set; }
+        public Guid RoomId { get; set; }
         public DateTimeOffset CheckInDate { get; set; }
         public DateTimeOffset CheckOutDate { get; set; }
         public ReservationStatus Status { get; set; }

@@ -10,7 +10,7 @@ namespace Istiqbal.Contracts.Requests.Reservation
     public class CreateReservationRequest
     {
         public Guid GuestId { get; set; }
-        public Guid roomId { get; set; }
+        public Guid RoomId { get; set; }
         public DateTimeOffset CheckInDate { get; set; }
         public DateTimeOffset CheckOutDate { get; set; }
 

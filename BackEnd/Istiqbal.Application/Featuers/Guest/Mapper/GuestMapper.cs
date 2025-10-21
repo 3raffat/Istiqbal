@@ -17,9 +17,9 @@ namespace Istiqbal.Application.Featuers.Guest.Mapper
             return new GuestDto
             (
                 Id: guest.Id,
-                fullName: guest.FullName,
-                email: guest.Email,
-                phone: guest.Phone,
+                FullName: guest.FullName,
+                Email: guest.Email,
+                Phone: guest.Phone,
                 Reservations: guest.Reservation.Select(x => x.toDto()).ToList()
             );
         }

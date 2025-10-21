@@ -5,6 +5,6 @@ using MediatR;
 
 namespace Istiqbal.Application.Featuers.Amenity.Commands.CreateAmenity
 {
-    public sealed record CreateAmenityCommand(string name):IRequest<Result<AmenityDto>>;
+    public sealed record CreateAmenityCommand(string Name):IRequest<Result<AmenityDto>>;
  
 }

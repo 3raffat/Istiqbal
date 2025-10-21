@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace Istiqbal.Application.Featuers.Room.Commands.DeleteRoom
 {
-    public sealed record DeleteRoomCommand(Guid id):IRequest<Result<Deleted>>;
+    public sealed record DeleteRoomCommand(Guid Id):IRequest<Result<Deleted>>;
 
 }

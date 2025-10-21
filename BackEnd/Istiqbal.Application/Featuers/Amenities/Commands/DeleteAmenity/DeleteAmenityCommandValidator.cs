@@ -11,7 +11,8 @@ namespace Istiqbal.Application.Featuers.Amenities.Commands.DeleteAmenity
     {
         public DeleteAmenityCommandValidator()
         {
-            RuleFor(x => x.id).NotEmpty();
+            RuleFor(x => x.Id)
+                      .NotEmpty().WithMessage("The Id cannot be empty.");
         }
     }
 }

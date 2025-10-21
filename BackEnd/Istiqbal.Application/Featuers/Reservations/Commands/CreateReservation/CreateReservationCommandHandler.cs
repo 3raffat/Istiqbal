@@ -1,4 +1,5 @@
-﻿using Istiqbal.Application.Common.Interface;
+﻿using Istiqbal.Application.Common.Caching;
+using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Reservations.Dtos;
 using Istiqbal.Application.Featuers.Reservations.Mapper;
 using Istiqbal.Domain.Common.Results;
@@ -23,7 +24,7 @@ namespace Istiqbal.Application.Featuers.Reservations.Commands.CreateReservation
     {
         public async Task<Result<ReservationDto>> Handle(CreateReservationCommand request, CancellationToken cancellationToken)
         {
-           var guestExists= await _context.Guests.AnyAsync(x=>x.Id==request.GuestId,cancellationToken);
+           var guestExists= await _context.Guests.AnyAsync(x=>x.Id==request.GuestId && !x.IsDeleted,cancellationToken);
 
             if(!guestExists)
             {
@@ -32,11 +33,11 @@ namespace Istiqbal.Application.Featuers.Reservations.Commands.CreateReservation
                 return GuestErrors.GuestNotFound;
             }
 
-            var room = await _context.Rooms.Include(x=>x.Type).FirstOrDefaultAsync(x=>x.Id==request.roomId,cancellationToken);
+            var room = await _context.Rooms.Include(x=>x.Type).FirstOrDefaultAsync(x=>x.Id==request.RoomId,cancellationToken);
 
             if(room is null)
             {
-                _logger.LogWarning("Room with ID {roomId} was not found.", request.roomId);
+                _logger.LogWarning("Room with ID {roomId} was not found.", request.RoomId);
 
                 return RoomErrors.RoomNotFound;
             }
@@ -56,7 +57,7 @@ namespace Istiqbal.Application.Featuers.Reservations.Commands.CreateReservation
                 .Reservation.Create(
                 Guid.NewGuid(),
                 request.GuestId,
-                request.roomId,
+                request.RoomId,
                 request.CheckInDate,
                 request.CheckOutDate,
                 numberOfDays,
@@ -82,7 +83,7 @@ namespace Istiqbal.Application.Featuers.Reservations.Commands.CreateReservation
 
             _logger.LogInformation("Reservation created successfully. ReservationId: {ReservationId}, GuestId: {GuestId}",reservation.Id,reservation.GuestId);
 
-            await _cache.RemoveByTagAsync("reservation",cancellationToken);
+            await _cache.RemoveByTagAsync(CacheKeys.Reservation.All,cancellationToken);
 
             return reservation.toDto();
         } 

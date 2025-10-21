@@ -1,4 +1,5 @@
-﻿using Istiqbal.Application.Common.Interface;
+﻿using Istiqbal.Application.Common.Caching;
+using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Amenity.Dtos;
 using Istiqbal.Application.Featuers.Amenity.Mapper;
 using Istiqbal.Domain.Amenities;
@@ -21,7 +22,7 @@ namespace Istiqbal.Application.Featuers.Amenity.Commands.CreateAmenity
     {
         public async Task<Result<AmenityDto>> Handle(CreateAmenityCommand request, CancellationToken cancellationToken)
         {
-            var name = request.name.ToLower();
+            var name = request.Name.Trim().ToLower();
             var exist = await _context.Amenities.AnyAsync(x => x.Name.ToLower() == name, cancellationToken);
 
             if (exist)
@@ -33,7 +34,7 @@ namespace Istiqbal.Application.Featuers.Amenity.Commands.CreateAmenity
 
             var amenityResult = Domain.Amenities.Amenity.Create(
                 Guid.NewGuid()
-                ,request.name);
+                ,request.Name.Trim());
 
             if (amenityResult.IsError)
                 return amenityResult.Errors;
@@ -44,7 +45,7 @@ namespace Istiqbal.Application.Featuers.Amenity.Commands.CreateAmenity
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            await _cache.RemoveByTagAsync("amenity",cancellationToken);
+            await _cache.RemoveByTagAsync(CacheKeys.Amenity.All, cancellationToken);
 
             _logger.LogInformation("Amenity created successfully: {AmenityName}", amenity.Name);
 

@@ -1,4 +1,5 @@
-﻿using Istiqbal.Domain.Common.Results;
+﻿using Istiqbal.Application.Featuers.RoomType.Dtos;
+using Istiqbal.Domain.Common.Results;
 using Istiqbal.Domain.Common.Results.Abstraction;
 using MediatR;
 using System;
@@ -11,5 +12,5 @@ using System.Xml.Linq;
 namespace Istiqbal.Application.Featuers.RoomTypes.Commands.UpdateRoomType
 {
     public sealed record  UpdateRoomTypeCommand(Guid Id,string Name, string Description, decimal PricePerNight, int MaxOccupancy,List<Guid> amenitieIds) 
-        :IRequest<Result<Updated>>;
+        :IRequest<Result<RoomTypeDto>>;
 }

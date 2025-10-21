@@ -15,7 +15,7 @@ namespace Istiqbal.Contracts.Requests.RoomTypes
             public decimal PricePerNight { get; set; }
 
             public int MaxOccupancy { get; set; }
-        public List<Guid> AmenitieIds { get; set; }
+            public List<Guid> AmenitieIds { get; set; }
 
     }
 }

@@ -11,10 +11,16 @@ namespace Istiqbal.Application.Featuers.Auth.Commands.RegisterUsers
     {
         public RegisterUserCommandValidator() 
         {
-            RuleFor(x=>x.email).NotEmpty();
-            RuleFor(x => x.username).NotEmpty();
-            RuleFor(x => x.password).NotEmpty();
+            RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email cannot be empty.")
+            .EmailAddress().WithMessage("Invalid email format."); 
 
+            RuleFor(x => x.UserName)
+                .NotEmpty().WithMessage("Username cannot be empty.")
+                .MaximumLength(50).WithMessage("Username must not exceed 50 characters."); 
+
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage("Password cannot be empty.");
         }
     }
 }

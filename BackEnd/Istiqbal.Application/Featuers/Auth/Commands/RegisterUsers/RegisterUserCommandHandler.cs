@@ -8,7 +8,7 @@ namespace Istiqbal.Application.Featuers.Auth.Commands.RegisterUsers
     {
         public async Task<Result<Success>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            return await _userService.Register(request.username,request.email,request.password, cancellationToken);
+            return await _userService.Register(request.UserName,request.Email,request.Password, cancellationToken);
         }
     }
 }

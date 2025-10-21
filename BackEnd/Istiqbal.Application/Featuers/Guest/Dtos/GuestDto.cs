@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 
 namespace Istiqbal.Application.Featuers.Guest.Dtos
 {
-    public sealed record GuestDto(Guid Id , string fullName, string email, string phone , List<ReservationDto> Reservations);
+    public sealed record GuestDto(Guid Id , string FullName, string Email, string Phone , List<ReservationDto> Reservations);
    
 }

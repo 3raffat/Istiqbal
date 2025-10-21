@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Istiqbal.Contracts.Requests.Rooms
 {
-    public class updateRoomRequest
+    public class UpdateRoomRequest
     {
-        public Guid roomTypeId { get; set; }
-        public RoomStatus roomStatus { get; set; }
+        public Guid RoomTypeId { get; set; }
+        public RoomStatus RoomStatus { get; set; }
     }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum RoomStatus

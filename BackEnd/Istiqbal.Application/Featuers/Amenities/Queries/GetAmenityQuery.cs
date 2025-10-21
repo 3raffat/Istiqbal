@@ -1,4 +1,5 @@
-﻿using Istiqbal.Application.Common.Interface;
+﻿using Istiqbal.Application.Common.Caching;
+using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Amenity.Dtos;
 using Istiqbal.Domain.Amenities;
 using Istiqbal.Domain.Common.Results;
@@ -12,10 +13,10 @@ namespace Istiqbal.Application.Featuers.Amenities.Queries
 {
     public sealed class GetAmenityQuery : ICachedQuery<Result<List<AmenityDto>>>
     {
-        public string CacheKey => "amenity";
+        public string CacheKey => CacheKeys.Amenity.All;
 
-        public string[] Tags => ["amenity"];
+        public string[] Tags => [CacheKeys.Amenity.All];
 
-        public TimeSpan? Expiration => TimeSpan.FromMinutes(20);
+        public TimeSpan? Expiration => CacheKeys.Expiration;
     }
 }

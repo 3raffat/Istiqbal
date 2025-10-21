@@ -20,6 +20,7 @@ namespace Istiqbal.Api
                 .AddControllerWithJsonConfiguration()
                 .AddIdentityInfrastructure()
                 .AddCors();
+            services.AddHttpContextAccessor();
 
             return services;
         }

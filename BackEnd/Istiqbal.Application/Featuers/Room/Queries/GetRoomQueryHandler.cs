@@ -16,7 +16,7 @@ namespace Istiqbal.Application.Featuers.Room.Queries
     {
         public async Task<Result<List<RoomDto>>> Handle(GetRoomQuery request, CancellationToken cancellationToken)
         {
-            var room = await _context.Rooms.Include(x=>x.Type).AsNoTracking().ToListAsync(cancellationToken);
+            var room = await _context.Rooms.Where(x=>!x.IsDeleted).Include(x=>x.Type).AsNoTracking().ToListAsync(cancellationToken);
 
             return room.ToDtos();
         }

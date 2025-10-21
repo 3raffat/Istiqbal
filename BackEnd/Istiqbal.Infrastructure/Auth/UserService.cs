@@ -21,7 +21,7 @@ namespace Istiqbal.Infrastructure.Auth
 
            var token = await _token.GenerateJwtTokenAsync(userInfo,cancellationToken);
 
-            return new LoginUserDto(user.Email!, token);
+            return new LoginUserDto(user.Email!, token.Value);
         }
         private async Task<AppUserDto> GetUserInfoAsync(AppUser user)
         {
@@ -56,6 +56,17 @@ namespace Istiqbal.Infrastructure.Auth
 
 
             return Result.Success;
+        }
+
+        public async Task<Result<AppUserDto>> GetUserByIdAsync(string userId)
+        {
+            var user = await _manager.FindByIdAsync(userId) ?? throw new InvalidOperationException(nameof(userId));
+
+            var roles = await _manager.GetRolesAsync(user);
+
+            var claims = await _manager.GetClaimsAsync(user);
+
+            return new AppUserDto(user.Id, user.Email!, roles, claims);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Istiqbal.Application.Featuers.Amenities.Queries
     {
         public async Task<Result<List<AmenityDto>>> Handle(GetAmenityQuery request, CancellationToken cancellationToken)
         {
-            var amenities = await _context.Amenities.AsNoTracking().ToListAsync(cancellationToken);
+            var amenities = await _context.Amenities.Where(x=>!x.IsDeleted).AsNoTracking().ToListAsync(cancellationToken);
 
             return amenities.toDtos();
         }

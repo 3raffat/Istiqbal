@@ -1,4 +1,5 @@
-﻿using Istiqbal.Application.Common.Interface;
+﻿using Istiqbal.Application.Common.Caching;
+using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Room.Dtos;
 using Istiqbal.Domain.Common.Results;
 using System;
@@ -11,10 +12,10 @@ namespace Istiqbal.Application.Featuers.Room.Queries
 {
     public sealed class GetRoomQuery : ICachedQuery<Result<List<RoomDto>>>
     {
-        public string CacheKey => "rooms";
+        public string CacheKey => CacheKeys.Room.All;
 
-        public string[] Tags => ["room"];
+        public string[] Tags => [CacheKeys.Room.All];
         
-        public TimeSpan? Expiration => TimeSpan.FromMinutes(20);
+        public TimeSpan? Expiration => CacheKeys.Expiration;
     }
 }

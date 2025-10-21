@@ -8,8 +8,8 @@ namespace Istiqbal.Contracts.Requests.Guests
 {
     public sealed class UpdateGuestRequest
     {
-        public string fullName { get; set; } = string.Empty;
-        public string email { get; set; } = string.Empty;
-        public string phone { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
     }
 }

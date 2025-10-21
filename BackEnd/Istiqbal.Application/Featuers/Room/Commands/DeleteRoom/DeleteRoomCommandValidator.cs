@@ -11,7 +11,7 @@ namespace Istiqbal.Application.Featuers.Room.Commands.DeleteRoom
     {
         public DeleteRoomCommandValidator()
         {
-            RuleFor(x => x.id)
+            RuleFor(x => x.Id)
                 .NotEmpty().WithMessage("Room ID is required.")
                 .Must(id => id != Guid.Empty).WithMessage("Room ID must be a valid GUID.");
         }

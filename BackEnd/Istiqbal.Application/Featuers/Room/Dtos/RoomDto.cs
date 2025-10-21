@@ -4,6 +4,6 @@ using Istiqbal.Contracts.Requests.Rooms;
 
 namespace Istiqbal.Application.Featuers.Room.Dtos
 {
-    public sealed record  RoomDto (Guid id , int number, string roomTypeName, int floor, RoomStatus status,decimal AmountPerNight );
+    public sealed record  RoomDto (Guid id , int Number, string RoomTypeName, int Floor, RoomStatus Status,decimal AmountPerNight );
    
 }

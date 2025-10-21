@@ -11,13 +11,14 @@ namespace Istiqbal.Application.Featuers.Amenity.Commands.UpdateAmenity
     {
         public UpdateAmenityCommandValidator()
         {
-            RuleFor(x => x.id)
+            RuleFor(x => x.Id)
                .NotEmpty()
                .WithMessage("Amenity ID is required.");
 
-            RuleFor(x => x.name)
-                .NotEmpty()
-                .WithMessage("Amenity name is required.");
+            RuleFor(x => x.Name)
+                .NotEmpty().WithMessage("Amenity name is required.")
+                .MaximumLength(50).WithMessage("The Name field must not exceed 50 characters.");
+            ;
         }
     }
 }

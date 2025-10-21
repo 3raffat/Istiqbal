@@ -1,4 +1,7 @@
-﻿using Istiqbal.Application.Common.Interface;
+﻿using Istiqbal.Application.Common.Caching;
+using Istiqbal.Application.Common.Interface;
+using Istiqbal.Application.Featuers.RoomType.Dtos;
+using Istiqbal.Application.Featuers.RoomType.Mappers;
 using Istiqbal.Domain.Amenities;
 using Istiqbal.Domain.Common.Results;
 using Istiqbal.Domain.Common.Results.Abstraction;
@@ -17,12 +20,12 @@ namespace Istiqbal.Application.Featuers.RoomTypes.Commands.UpdateRoomType
 {
     public sealed class UpdateRoomTypeCommandHandler
         (IAppDbContext _context,ILogger<UpdateRoomTypeCommandHandler> _logger, HybridCache _cache)
-        : IRequestHandler<UpdateRoomTypeCommand, Result<Updated>>
+        : IRequestHandler<UpdateRoomTypeCommand, Result<RoomTypeDto>>
     {
-        public async Task<Result<Updated>> Handle(UpdateRoomTypeCommand request, CancellationToken cancellationToken)
+        public async Task<Result<RoomTypeDto>> Handle(UpdateRoomTypeCommand request, CancellationToken cancellationToken)
         {
-            var roomType = await _context.RoomTypes.Include(x=>x.Amenities).
-                FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            var roomType = await _context.RoomTypes.Include(x=>x.Amenities.Where(x=>!x.IsDeleted)).
+                FirstOrDefaultAsync(x => x.Id == request.Id && !x.IsDeleted, cancellationToken);
 
             if (roomType is null)
             {
@@ -31,21 +34,8 @@ namespace Istiqbal.Application.Featuers.RoomTypes.Commands.UpdateRoomType
                 return RoomTypeErrors.RoomTypeNotFound;
             }
 
-            List<Domain.Amenities.Amenity> amenities = new();
+            var amenities = await _context.Amenities.Where(x=>request.amenitieIds.Contains(x.Id)).ToListAsync(cancellationToken);
 
-            foreach (var amenityId in request.amenitieIds)
-            {
-                var existAmenity = await _context.Amenities.FirstOrDefaultAsync(x => x.Id == amenityId, cancellationToken);
-
-                if (existAmenity is null)
-                {
-                    _logger.LogWarning("Amenity with ID {Id} not found ", amenityId);
-
-                    return AmenityErrors.AmenityIdNotFound;   
-                }
-
-                amenities.Add(existAmenity!);
-            }
             var updatedRoomType = 
                 roomType.Update(request.Name.Trim(), 
                 request.Description.Trim(), 
@@ -58,11 +48,11 @@ namespace Istiqbal.Application.Featuers.RoomTypes.Commands.UpdateRoomType
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            await _cache.RemoveByTagAsync("roomType", cancellationToken);
+            await _cache.RemoveByTagAsync(CacheKeys.RoomType.All, cancellationToken);
 
             _logger.LogInformation("Room type with ID {RoomTypeId} updated successfully.", roomType.Id);
 
-            return Result.Updated;
+            return roomType.ToDto();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Istiqbal.Application.Common.Interface;
+﻿
+using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Auth.Dtos;
 using Istiqbal.Domain.Auth;
 using Istiqbal.Domain.Common.Results;
@@ -12,9 +13,9 @@ using System.Text;
 
 namespace Istiqbal.Infrastructure.Auth
 {
-    public sealed class TokenProvider(IConfiguration _configuration ,IAppDbContext _context) : ITokenProvider
+    public sealed class TokenProvider(IConfiguration _configuration , IAppDbContext _context) : ITokenProvider
     {
-        public async Task<TokenResponse> GenerateJwtTokenAsync(AppUserDto user, CancellationToken ct = default)
+        public async Task<Result<TokenResponse>> GenerateJwtTokenAsync(AppUserDto user, CancellationToken ct = default)
         {
             var tokenResult = await GenerateJwt(user, ct);
 
@@ -32,8 +33,8 @@ namespace Istiqbal.Infrastructure.Auth
         
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.userId),
-                new Claim(JwtRegisteredClaimNames.Email, user.userEmail),
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserId),
+                new Claim(JwtRegisteredClaimNames.Email, user.UserEmail),
             };
 
             foreach (var role in user.Roles)
@@ -55,13 +56,13 @@ namespace Istiqbal.Infrastructure.Auth
             var token = tokenHandler.CreateToken(descriptor);
 
             var oldRefreshTokens = await _context.RefreshTokens
-            .Where(rt => rt.UserId == user.userId)
+            .Where(rt => rt.UserId == user.UserId)
             .ExecuteDeleteAsync(ct);
 
             var refreshTokenResult = RefreshToken.Create(
                 Guid.NewGuid(),
                 GenerateRefreshToken(),
-                user.userId,
+                user.UserId,
                 DateTime.UtcNow.AddDays(7));
 
             if (refreshTokenResult.IsError)
@@ -86,6 +87,32 @@ namespace Istiqbal.Infrastructure.Auth
         private static string GenerateRefreshToken()
         {
             return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+        }
+
+        public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]!)),
+                ValidateIssuer = true,
+                ValidIssuer = _configuration["JwtSettings:Issuer"],
+                ValidateAudience = true,
+                ValidAudience = _configuration["JwtSettings:Audience"],
+                ValidateLifetime = false, 
+                ClockSkew = TimeSpan.Zero
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+
+            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid token.");
+            }
+
+            return principal;
         }
     }
 }

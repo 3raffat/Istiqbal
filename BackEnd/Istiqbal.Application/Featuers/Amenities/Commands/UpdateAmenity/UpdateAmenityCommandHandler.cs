@@ -1,4 +1,5 @@
-﻿using Istiqbal.Application.Common.Interface;
+﻿using Istiqbal.Application.Common.Caching;
+using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Amenity.Dtos;
 using Istiqbal.Application.Featuers.Amenity.Mapper;
 using Istiqbal.Domain.Amenities;
@@ -21,25 +22,36 @@ namespace Istiqbal.Application.Featuers.Amenity.Commands.UpdateAmenity
     {
         public async Task<Result<AmenityDto>> Handle(UpdateAmenityCommand request, CancellationToken cancellationToken)
         {
-            var amenity = await _context.Amenities.FirstOrDefaultAsync(x=>x.Id==request.id,cancellationToken);
+            var amenity = await _context.Amenities.FirstOrDefaultAsync(x=>x.Id==request.Id && !x.IsDeleted,cancellationToken);
 
             if (amenity is null)
             {
-                _logger.LogWarning("Amenity with Id: {AmenityId} not exists.", request.id);
+                _logger.LogWarning("Amenity with Id: {AmenityId} not exists.", request.Id);
 
                 return AmenityErrors.AmenityIdNotFound;
             }
 
-            var amenityResult = amenity.Update(request.name);
+            var requestName = request.Name.Trim().ToLower();
+
+            var existName = await _context.Amenities.AnyAsync(x=>x.Name.ToLower() == requestName && x.Id != request.Id, cancellationToken);
+
+            if(existName)
+            {
+                _logger.LogWarning("Amenity with Name: {AmenityName} already exists", request.Name);
+
+                return AmenityErrors.AmenityAlreadyExists;
+            }
+
+            var amenityResult = amenity.Update(request.Name);
 
             if (amenityResult.IsError)
                 return amenityResult.Errors;
               
             await _context.SaveChangesAsync(cancellationToken);
 
-            await _cache.RemoveByTagAsync("amenity", cancellationToken);
+            await _cache.RemoveByTagAsync(CacheKeys.Amenity.All, cancellationToken);
 
-            _logger.LogWarning("Amenity with ID {amenityId} is Update successfully",amenity.Id);
+            _logger.LogInformation("Amenity with ID {AmenityId} is Update successfully",amenity.Id);
 
           return  amenity.toDto();
         }

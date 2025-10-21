@@ -1,4 +1,5 @@
-﻿using Istiqbal.Application.Common.Interface;
+﻿using Istiqbal.Application.Common.Caching;
+using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Reservations.Dtos;
 using Istiqbal.Application.Featuers.Reservations.Mapper;
 using Istiqbal.Domain.Common.Results;
@@ -21,12 +22,11 @@ namespace Istiqbal.Application.Featuers.Guest.Commands.DeleteGuestReservation
     {
         public async Task<Result<ReservationDto>> Handle(CancelGuestReservationCommand request, CancellationToken cancellationToken)
         {
-            var reservation = await _context.Reservations
-              .FirstOrDefaultAsync(r => r.Id == request.reservationId && r.GuestId == request.guestId, cancellationToken);
-
+            var reservation = await _context.Reservations .FirstOrDefaultAsync(r => r.Id == request.ReservationId && r.GuestId == request.GuestId && !r.IsDeleted && !r.Guest.IsDeleted,
+                                                                               cancellationToken);
             if (reservation is null)
             {
-                _logger.LogWarning("Reservation {ReservationId} not found for guest {GuestId}", request.reservationId, request.guestId);
+                _logger.LogWarning("Reservation {ReservationId} not found for guest {GuestId}", request.ReservationId, request.GuestId);
 
                 return ReservationErrors.ReservationNotFoundForGuest;
             }
@@ -40,7 +40,7 @@ namespace Istiqbal.Application.Featuers.Guest.Commands.DeleteGuestReservation
             {
                 _logger.LogWarning(
                     "Cannot cancel reservation {ReservationId} - only {Hours:F1} hours until check-in",
-                    request.reservationId,
+                    request.ReservationId,
                     hoursUntilCheckIn);
                 return ReservationErrors.CancellationTooLate;
             }
@@ -53,6 +53,10 @@ namespace Istiqbal.Application.Featuers.Guest.Commands.DeleteGuestReservation
 
             await _context.SaveChangesAsync(cancellationToken);
 
+            await _cache.RemoveByTagAsync(CacheKeys.Guest.All,cancellationToken);
+
+            await _cache.RemoveByTagAsync(CacheKeys.Reservation.All, cancellationToken);
+
             await _context.Entry(reservation)
              .Reference(r => r.Guest)
              .LoadAsync(cancellationToken);
@@ -62,7 +66,7 @@ namespace Istiqbal.Application.Featuers.Guest.Commands.DeleteGuestReservation
               .LoadAsync(cancellationToken);
 
             _logger.LogInformation("Reservation {ReservationId} cancelled successfully for guest {GuestId}",
-                reservation.Id, request.guestId);
+                reservation.Id, request.GuestId);
 
             return reservation.toDto();
         }

@@ -5,7 +5,9 @@ using Istiqbal.Application.Featuers.Guest.Commands.DeleteGuest;
 using Istiqbal.Application.Featuers.Guest.Commands.DeleteGuestReservation;
 using Istiqbal.Application.Featuers.Guest.Commands.UpdateGuest;
 using Istiqbal.Application.Featuers.Guest.Commands.UpdateGuestReservation;
+using Istiqbal.Application.Featuers.Guest.Dtos;
 using Istiqbal.Application.Featuers.Guest.Queries;
+using Istiqbal.Application.Featuers.Reservations.Dtos;
 using Istiqbal.Contracts.Requests.Guests;
 using Istiqbal.Contracts.Requests.Reservation;
 using Istiqbal.Contracts.Responses;
@@ -13,106 +15,162 @@ using Istiqbal.Domain.Auth;
 using Istiqbal.Domain.Common.Results;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
+using static Istiqbal.Application.Common.Responses.StandardResponse;
 
 namespace Istiqbal.Api.Controllers
 {
+    [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/guests")]
-    public sealed class GuestController(ISender _sender) :ApiController
+    public sealed class GuestController(ISender _sender) : ControllerBase
     {
+
         [HttpGet]
-        //[Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
+        [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
+        [EndpointName("GetGuests")]
+        [EndpointDescription("Retrieves a list of all guests including their contact information.")]
+        [ProducesResponseType(typeof(StandardSuccessResponse<List<GuestDto>>), StatusCodes.Status200OK)]
+        [Produces("application/json")]
         public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
             var result = await _sender.Send(new GetGuestQuery(), cancellationToken);
 
-            return result.ToActionResult(this, "Guestes retrieved successfully");
+            if (result.IsError)
+                return result.TopError.ToActionResult();
+
+            return Ok(new StandardSuccessResponse<List<GuestDto>>(
+                result.Value,
+                StatusCodes.Status200OK,
+                "Guests retrieved successfully"));
         }
 
-       [HttpPost]
-      // [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
-        public async Task<IActionResult> Create(CreateGuestRequest request , CancellationToken cancellationToken)
+        [HttpPost]
+        [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
+        [EndpointName("CreateGuest")]
+        [EndpointDescription("Creates a new guest with full name, phone, and email.")]
+        [ProducesResponseType(typeof(StandardSuccessResponse<GuestDto>), StatusCodes.Status201Created)]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> Create([FromBody] CreateGuestRequest request, CancellationToken cancellationToken)
         {
             var result = await _sender.Send(
                 new CreateGuestCommand(
-                     request.fullName
-                    ,request.phone
-                    , request.email)
-                , cancellationToken);
+                    request.FullName,
+                    request.Phone,
+                    request.Email),
+                cancellationToken);
 
-            return result.ToActionResult(
-            this,
-            "Guest created successfully",
-            Guest => CreatedAtAction(
-                nameof(Create),
-                new { id = Guest.Id },
-                result.ToApiResponse("Guest created successfully")
-            ));
+            if (result.IsError)
+                return result.TopError.ToActionResult();
+
+            return StatusCode(
+                StatusCodes.Status201Created,
+                new StandardSuccessResponse<GuestDto>(
+                    result.Value,
+                    StatusCodes.Status201Created,
+                    "Guest created successfully"));
         }
 
-        [HttpPut("{id:guid}")]
-        //[Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> Update(Guid id,UpdateGuestRequest request, CancellationToken cancellationToken)
+        [HttpPut("{guestId:guid}")]
+        [Authorize(Roles = nameof(Role.Admin))]
+        [EndpointName("UpdateGuest")]
+        [EndpointDescription("Updates the information of an existing guest by ID.")]
+        [ProducesResponseType(typeof(StandardSuccessResponse<GuestDto>), StatusCodes.Status200OK)]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> Update(Guid guestId, [FromBody] UpdateGuestRequest request, CancellationToken cancellationToken)
         {
             var result = await _sender.Send(
                 new UpdateGuestCommand(
-                    id
-                    ,request.fullName
-                    , request.phone
-                    , request.email)
-                , cancellationToken);
+                    guestId,
+                    request.FullName,
+                    request.Phone,
+                    request.Email),
+                cancellationToken);
 
-            return result.ToActionResult(this, "Guest updated successfully");
+            if (result.IsError)
+                return result.TopError.ToActionResult();
 
+            return Ok(new StandardSuccessResponse<GuestDto>(
+                result.Value,
+                StatusCodes.Status200OK,
+                "Guest updated successfully"));
         }
 
-        [HttpDelete("{id:guid}")]
-        //[Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        [HttpDelete("{guestId:guid}")]
+        [Authorize(Roles = nameof(Role.Admin))]
+        [EndpointName("DeleteGuest")]
+        [EndpointDescription("Deletes a guest by its unique identifier.")]
+        [ProducesResponseType(typeof(StandardSuccessResponse<object>), StatusCodes.Status200OK)]
+        [Produces("application/json")]
+        public async Task<IActionResult> Delete(Guid guestId, CancellationToken cancellationToken)
         {
             var result = await _sender.Send(
-                new DeleteGuestCommand(id)
-                , cancellationToken);
+                new DeleteGuestCommand(guestId),
+                cancellationToken);
 
+            if (result.IsError)
+                return result.TopError.ToActionResult();
 
-            if (result.IsSuccess)
-            {
-                return Ok(new ApiResponse<object>
-                {
-                    Success = true,
-                    Message = "Guest deleted successfully",
-                    Timestamp = DateTime.UtcNow
-                });
-            }
-
-            return result.ToErrorActionResult<Deleted>(this);
+            return Ok(new StandardSuccessResponse<object>(
+                null,
+                StatusCodes.Status200OK,
+                "Guest deleted successfully"));
         }
+
         [HttpDelete("{guestId:guid}/reservations/{reservationId:guid}")]
-        public async Task<IActionResult> Cancle(Guid guestId,Guid reservationId, CancellationToken cancellationToken)
+        [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
+        [EndpointName("CancelReservation")]
+        [EndpointDescription("Cancels a specific reservation for a guest.")]
+        [ProducesResponseType(typeof(StandardSuccessResponse<ReservationDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json")]
+        public async Task<IActionResult> CancelReservation(Guid guestId, Guid reservationId, CancellationToken cancellationToken)
         {
             var result = await _sender.Send(
-                new CancelGuestReservationCommand(guestId,reservationId)
-                , cancellationToken);
+                new CancelGuestReservationCommand(guestId, reservationId),
+                cancellationToken);
 
-            return result.ToActionResult(this, "Reservation Cancelled successfully");
+            if (result.IsError)
+                return result.TopError.ToActionResult();
+
+            return Ok(new StandardSuccessResponse<ReservationDto>(
+                result.Value,
+                StatusCodes.Status200OK,
+                "Reservation cancelled successfully"));
         }
 
         [HttpPut("{guestId:guid}/reservations/{reservationId:guid}")]
-        public async Task<IActionResult> Update(Guid guestId, Guid reservationId, UpdateReservationRequest request, CancellationToken cancellationToken)
+        [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
+        [EndpointName("UpdateReservation")]
+        [EndpointDescription("Updates a specific reservation for a guest with new room, dates, and status.")]
+        [ProducesResponseType(typeof(StandardSuccessResponse<ReservationDto>), StatusCodes.Status200OK)]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> UpdateReservation(Guid guestId, Guid reservationId, [FromBody] UpdateReservationRequest request, CancellationToken cancellationToken)
         {
             var result = await _sender.Send(
                 new UpdateGuestReservationCommand(
                     guestId,
                     reservationId,
-                    request.roomId,
+                    request.RoomId,
                     request.CheckInDate,
                     request.CheckOutDate,
-                    request.Status)
-                , cancellationToken);
+                    request.Status),
+                cancellationToken);
 
-            return result.ToActionResult(this, "Reservation guest updated successfully");
+            if (result.IsError)
+                return result.TopError.ToActionResult();
+
+            return Ok(new StandardSuccessResponse<ReservationDto>(
+                result.Value,
+                StatusCodes.Status200OK,
+                "Reservation updated successfully"));
         }
     }
 }

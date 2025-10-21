@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Istiqbal.Application.Featuers.Auth.Commands.LoginUsers
 {
-    public sealed record  LoginUserCommand(string email, string password):IRequest<Result<LoginUserDto>>;
+    public sealed record  LoginUserCommand(string Email, string Password):IRequest<Result<LoginUserDto>>;
     
 }
 
