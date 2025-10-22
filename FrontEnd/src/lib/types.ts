@@ -102,6 +102,7 @@ export interface ReservationResponse {
   roomNumber: number;
   checkInDate: string;
   checkOutDate: string;
+  amount: number;
   status: string;
 }
 export type ReservationFormData = {
@@ -131,4 +132,12 @@ export interface Guest {
   fullName: string;
   email: string;
   phone: string;
+}
+export interface Room {
+  id: string;
+  number: number;
+  roomTypeName: string;
+  floor: number;
+  status: string;
+  amountPerNight: number;
 }

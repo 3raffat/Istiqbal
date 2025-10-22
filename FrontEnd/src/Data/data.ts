@@ -1,5 +1,7 @@
 /*_____________________________________________________________________________________________*/
 
+import { Room } from "../lib/types";
+
 export const getStatusColor = (status: string) => {
   switch (status.trim()) {
     case "Available":
@@ -78,3 +80,31 @@ export const getInitials = (name: string) => {
   }
   return name.charAt(0);
 };
+
+export const getRoomStats = (rooms: Room[]) => [
+  {
+    label: "إجمالي الغرف",
+    count: rooms.length,
+    color: "text-slate-900",
+  },
+  {
+    label: "متاحة",
+    count: rooms.filter((r) => r.status === "Available").length,
+    color: "text-green-600",
+  },
+  {
+    label: "تحت الصيانة",
+    count: rooms.filter((r) => r.status === "UnderMaintenance").length,
+    color: "text-slate-600",
+  },
+  {
+    label: "محجوزة",
+    count: rooms.filter((r) => r.status === "Occupied").length,
+    color: "text-red-600",
+  },
+  {
+    label: "تحت التنظيف",
+    count: rooms.filter((r) => r.status === "Cleaning").length,
+    color: "text-yellow-600",
+  },
+];

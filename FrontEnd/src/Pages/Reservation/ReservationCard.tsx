@@ -74,9 +74,7 @@ export const ReservationCard = ({
       <div className="flex-1">
         <div className="text-sm mb-2">
           <div className="text-slate-600 mb-1">المبلغ</div>
-          <div className="font-bold text-slate-900">
-            {reservation.amount} ريال
-          </div>
+          <div className="font-bold text-slate-900">{reservation.amount} $</div>
         </div>
         <Badge className={getStatusColor(reservation.status)}>
           {getStatusText(reservation.status)}

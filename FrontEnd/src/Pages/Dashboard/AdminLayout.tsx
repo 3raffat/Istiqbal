@@ -1,16 +1,57 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
-import { Hotel, LogOut } from "lucide-react";
-import { navigation } from "../../Routes/route";
-import { logout } from "../../lib/jwt";
+import {
+  Hotel,
+  LogOut,
+  Building2,
+  Users,
+  Calendar,
+  UserPlus,
+} from "lucide-react";
+import { getRole, logout } from "../../lib/jwt";
+
+const navigation = [
+  {
+    name: "أنواع الغرف",
+    to: "/admin/room-types",
+    icon: Hotel,
+    roles: ["Admin"],
+  },
+  { name: "الغرف", to: "/admin/rooms", icon: Building2, roles: ["Admin"] },
+  {
+    name: "النزلاء",
+    to: "/admin/guests",
+    icon: Users,
+    roles: ["Admin", "Receptionist"],
+  },
+  {
+    name: "الحجوزات",
+    to: "/admin",
+    icon: Calendar,
+    roles: ["Admin", "Receptionist"],
+  },
+  {
+    name: "اضافة موظف",
+    to: "/admin/employees",
+    icon: UserPlus,
+    roles: ["Admin"],
+  },
+];
 
 export default function AdminLayout() {
   const pathname = useLocation().pathname;
   const router = useNavigate();
+
+  const userRole = getRole() || "Receptionist";
+
   const handleLogout = () => {
     logout();
     router("/login");
   };
+
+  const filteredNav = navigation.filter((item) =>
+    item.roles.includes(userRole)
+  );
 
   return (
     <div className="min-h-screen bg-slate-50" dir="rtl">
@@ -29,7 +70,7 @@ export default function AdminLayout() {
 
         {/* Navigation */}
         <nav className="space-y-2 mb-8">
-          {navigation.map((item) => {
+          {filteredNav.map((item) => {
             const isActive = pathname === item.to;
             return (
               <Link
@@ -63,7 +104,6 @@ export default function AdminLayout() {
 
       {/* Main Content */}
       <main className="mr-64">
-        {" "}
         <Outlet />
       </main>
     </div>
