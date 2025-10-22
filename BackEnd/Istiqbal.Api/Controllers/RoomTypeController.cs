@@ -12,6 +12,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.OutputCaching;
 using System.Net.Mime;
 using static Istiqbal.Application.Common.Responses.StandardResponse;
 
@@ -27,13 +28,14 @@ namespace Istiqbal.Api.Controllers
         [EndpointDescription("Retrieves a list of all room types with their details.")]
         [ProducesResponseType(typeof(StandardSuccessResponse<List<RoomTypeDto>>), StatusCodes.Status200OK)]
         [Produces("application/json")]
+        [OutputCache(Duration = 60)]
         public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
             var result = await _sender.Send(new GetRoomTypeQuery(), cancellationToken);
 
             if (result.IsError)
                 return result.TopError.ToActionResult();
-
+            Console.WriteLine("viset controller ");
             return Ok(new StandardSuccessResponse<List<RoomTypeDto>>(result.Value,
                                                                      StatusCodes.Status200OK,
                                                                      "Room types retrieved successfully"));

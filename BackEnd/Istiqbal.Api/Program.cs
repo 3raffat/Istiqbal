@@ -4,6 +4,7 @@ using Istiqbal.Application;
 using Istiqbal.Infrastructure;
 using Istiqbal.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -12,8 +13,11 @@ builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddApplication();
 
+builder.Host.UseSerilog((context, loggerConfig) =>
+    loggerConfig.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddControllers();
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -38,10 +42,7 @@ using (var scope = app.Services.CreateScope())
         .GetRequiredService<IHttpContextAccessor>();
     ErrorExtensions.Initialize(httpContextAccessor);
 }
-app.UseCors();
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+app.UseCoreMiddlewares(builder.Configuration);
 
 app.MapControllers();
 

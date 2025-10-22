@@ -1,5 +1,6 @@
 ﻿using Istiqbal.Application.Common.Interface;
 using Istiqbal.Infrastructure.Auth;
+using Istiqbal.Infrastructure.BackgroundJobs;
 using Istiqbal.Infrastructure.Data;
 using Istiqbal.Infrastructure.Data.Interceptors;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -71,6 +72,8 @@ namespace Istiqbal.Infrastructure
             services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
 
             services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+
+            services.AddHostedService<BookingStatusUpdateService>();
 
             return services;
         }

@@ -15,7 +15,9 @@ namespace Istiqbal.Domain.RoomTypes.Rooms
         public RoomStatus  Status { get; private set; } 
         private readonly List<Reservation> _reservation = new();
         public IEnumerable<Reservation> Reservation => _reservation.AsReadOnly();
-  
+        public DateTime? CleaningStartTime { get; set; }
+        public DateTime? LastMaintenanceDate { get; set; }
+        public DateTime? MaintenanceStartTime { get; set; }
         private Room() { }
         private Room(Guid id, Guid roomTypeId,int floor,int number,RoomStatus status) : base(id)
         {
@@ -49,28 +51,10 @@ namespace Istiqbal.Domain.RoomTypes.Rooms
             RoomTypeId = roomTypeId;
             return Result.Updated;
         }
-        //public Result<Updated> AddAmenities(List<Amenity> amenities)
-        //{
-        //    _amenities.RemoveAll(exist => amenities.All(x=>x.Id != exist.Id)); 
-
-        //    foreach (var amenity in amenities)
-        //    {
-        //       var exist = _amenities.FirstOrDefault(x => x.Id == amenity.Id);
-        //        if (exist is null)
-        //        {
-        //            _amenities.Add(amenity);
-        //        }
-        //        else
-        //        {
-        //            var result = exist.Update(amenity.Name);
-
-        //            if (result.IsError)
-        //                return result.Errors;
-        //        }
-
-        //    }
-        //    return Result.Updated;
-        //}
+        public void SetStatus(RoomStatus newStatus)
+        {
+            Status = newStatus;
+        }
         private static int GetFloorNumber(int lastRoomNumber,int roomPerFloor = 10)
         {
          

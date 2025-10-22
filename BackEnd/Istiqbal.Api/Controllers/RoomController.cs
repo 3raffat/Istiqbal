@@ -13,6 +13,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using System.Threading.Tasks;
 using static Istiqbal.Application.Common.Responses.StandardResponse;
 
@@ -29,6 +30,7 @@ namespace Istiqbal.Api.Controllers
         [EndpointDescription("Retrieves a list of all rooms with their type and status.")]
         [ProducesResponseType(typeof(StandardSuccessResponse<List<RoomDto>>), StatusCodes.Status200OK)]
         [Produces("application/json")]
+        [OutputCache(Duration = 60)]
         public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
             var result = await _sender.Send(new GetRoomQuery(), cancellationToken);

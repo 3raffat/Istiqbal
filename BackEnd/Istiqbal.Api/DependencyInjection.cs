@@ -5,7 +5,10 @@ using Istiqbal.Api.Services;
 using Istiqbal.Application.Common.Interface;
 using Istiqbal.Contracts.Responses;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.RateLimiting;
+using Serilog;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 
 namespace Istiqbal.Api
 {
@@ -19,6 +22,7 @@ namespace Istiqbal.Api
                 .AddExceptionHandling()
                 .AddControllerWithJsonConfiguration()
                 .AddIdentityInfrastructure()
+                .AddOutputCache()
                 .AddCors();
             services.AddHttpContextAccessor();
 
@@ -108,6 +112,35 @@ namespace Istiqbal.Api
             });
             return services;
         }
+        public static IServiceCollection AddAppOutputCaching(this IServiceCollection services)
+        {
 
+            services.AddOutputCache(options =>
+            {
+                options.SizeLimit = 100 * 1024 * 1024;
+                options.AddBasePolicy(policy =>
+                    policy.Expire(TimeSpan.FromSeconds(60)));
+            });
+
+            return services;
+        }
+        public static IApplicationBuilder UseCoreMiddlewares(this IApplicationBuilder app, IConfiguration configuration)
+        {
+            app.UseExceptionHandler();
+
+            app.UseStatusCodePages();
+
+            app.UseHttpsRedirection();
+
+            app.UseSerilogRequestLogging();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
+            app.UseOutputCache();
+
+            return app;
+        }
     }
 }

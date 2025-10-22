@@ -9,6 +9,7 @@ using Istiqbal.Domain.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using static Istiqbal.Application.Common.Responses.StandardResponse;
 
 namespace Istiqbal.Api.Controllers
@@ -24,6 +25,7 @@ namespace Istiqbal.Api.Controllers
         [EndpointDescription("Retrieves a list of all amenities available.")]
         [ProducesResponseType(typeof(StandardSuccessResponse<List<AmenityDto>>), StatusCodes.Status200OK)]
         [Produces("application/json")]
+        [OutputCache(Duration = 60)]
         public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
             var result = await _sender.Send(new GetAmenityQuery(), cancellationToken);
@@ -38,7 +40,7 @@ namespace Istiqbal.Api.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
+        [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
         [EndpointName("CreateAmenity")]
         [EndpointDescription("Creates a new amenity with the specified name.")]
         [ProducesResponseType(typeof(StandardSuccessResponse<AmenityDto>), StatusCodes.Status201Created)]
