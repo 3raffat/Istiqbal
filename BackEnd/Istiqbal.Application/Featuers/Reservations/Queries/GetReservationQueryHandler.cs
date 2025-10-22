@@ -18,7 +18,7 @@ namespace Istiqbal.Application.Featuers.Reservations.Queries
         public async Task<Result<List<ReservationDto>>> Handle(GetReservationQuery request, CancellationToken cancellationToken)
         {
             var reservation = await _context.Reservations
-                .Where(x=>x.Status!= ReservationStatus.Cancelled && !x.IsDeleted)
+                .Where(x=>x.Status!= ReservationStatus.Cancelled && !x.IsDeleted && !x.Guest.IsDeleted && !x.Room.IsDeleted)
                 .Include(x=>x.Room).ThenInclude(x=>x.Type)
                 .Include(x=>x.Guest).ToListAsync(cancellationToken);
 

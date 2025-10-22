@@ -1,6 +1,7 @@
 ﻿using Istiqbal.Application.Common.Interface;
 using Istiqbal.Application.Featuers.Room.Dtos;
 using Istiqbal.Application.Featuers.Room.Mappers;
+using Istiqbal.Contracts.Requests.Rooms;
 using Istiqbal.Domain.Common.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ namespace Istiqbal.Application.Featuers.Room.Queries
     {
         public async Task<Result<List<RoomDto>>> Handle(GetRoomQuery request, CancellationToken cancellationToken)
         {
-            var room = await _context.Rooms.Where(x=>!x.IsDeleted).Include(x=>x.Type).AsNoTracking().ToListAsync(cancellationToken);
+            var room = await _context.Rooms.Where(x=>!x.IsDeleted && x.Status == RoomStatus.Available).Include(x=>x.Type).AsNoTracking().ToListAsync(cancellationToken);
 
             return room.ToDtos();
         }

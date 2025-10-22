@@ -31,10 +31,11 @@ namespace Istiqbal.Application.Featuers.Guest.Commands.DeleteGuestReservation
                 return ReservationErrors.ReservationNotFoundForGuest;
             }
 
-            var now = DateTimeOffset.UtcNow;
-            var checkIn = reservation.CheckInDate;
+            var now = DateTime.Now;
+            var checkInDateTime = reservation.CheckInDate.ToDateTime(TimeOnly.MinValue);
 
-            var hoursUntilCheckIn = (checkIn - now).TotalHours;
+            var hoursUntilCheckIn = (checkInDateTime - now).TotalHours;
+
 
             if (hoursUntilCheckIn < 24)
             {

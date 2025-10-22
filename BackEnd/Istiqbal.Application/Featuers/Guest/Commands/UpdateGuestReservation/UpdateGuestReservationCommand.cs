@@ -9,7 +9,7 @@ namespace Istiqbal.Application.Featuers.Guest.Commands.UpdateGuestReservation
         Guid GuestId,
         Guid ReservationId,
         Guid RoomId,
-        DateTimeOffset CheckInDate,
-        DateTimeOffset CheckOutDate,
+        DateOnly CheckInDate,
+        DateOnly CheckOutDate,
         ReservationStatus Status):IRequest<Result<ReservationDto>>;
 }

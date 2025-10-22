@@ -29,7 +29,6 @@ namespace Istiqbal.Api.Controllers
     {
 
         [HttpGet]
-        [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
         [EndpointName("GetGuests")]
         [EndpointDescription("Retrieves a list of all guests including their contact information.")]
         [ProducesResponseType(typeof(StandardSuccessResponse<List<GuestDto>>), StatusCodes.Status200OK)]

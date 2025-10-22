@@ -25,7 +25,6 @@ namespace Istiqbal.Api.Controllers
     {
 
         [HttpGet]
-        [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
         [EndpointName("GetRooms")]
         [EndpointDescription("Retrieves a list of all rooms with their type and status.")]
         [ProducesResponseType(typeof(StandardSuccessResponse<List<RoomDto>>), StatusCodes.Status200OK)]

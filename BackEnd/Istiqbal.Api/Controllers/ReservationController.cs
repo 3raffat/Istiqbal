@@ -18,7 +18,6 @@ namespace Istiqbal.Api.Controllers
     public class ReservationController(ISender _sender) :ControllerBase
     {
         [HttpGet]
-        [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
         [EndpointName("GetReservations")]
         [EndpointDescription("Retrieves a list of all reservations including guest and room details.")]
         [ProducesResponseType(typeof(StandardSuccessResponse<List<ReservationDto>>), StatusCodes.Status200OK)]

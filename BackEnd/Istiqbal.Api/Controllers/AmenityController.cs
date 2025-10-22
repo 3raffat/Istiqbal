@@ -20,7 +20,6 @@ namespace Istiqbal.Api.Controllers
     {
 
         [HttpGet]
-        [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
         [EndpointName("GetAmenities")]
         [EndpointDescription("Retrieves a list of all amenities available.")]
         [ProducesResponseType(typeof(StandardSuccessResponse<List<AmenityDto>>), StatusCodes.Status200OK)]
@@ -39,7 +38,7 @@ namespace Istiqbal.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
+        //[Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Receptionist)}")]
         [EndpointName("CreateAmenity")]
         [EndpointDescription("Creates a new amenity with the specified name.")]
         [ProducesResponseType(typeof(StandardSuccessResponse<AmenityDto>), StatusCodes.Status201Created)]

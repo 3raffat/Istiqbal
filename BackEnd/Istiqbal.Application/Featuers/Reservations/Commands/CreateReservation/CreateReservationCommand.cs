@@ -10,8 +10,8 @@ namespace Istiqbal.Application.Featuers.Reservations.Commands.CreateReservation
     public sealed record CreateReservationCommand(
         Guid GuestId,
         Guid RoomId,
-        DateTimeOffset CheckInDate,
-        DateTimeOffset CheckOutDate 
+        DateOnly CheckInDate,
+        DateOnly CheckOutDate 
        ):IRequest<Result<ReservationDto>>;
    
 }

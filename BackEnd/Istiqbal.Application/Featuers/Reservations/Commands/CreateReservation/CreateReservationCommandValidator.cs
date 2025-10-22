@@ -18,12 +18,10 @@ namespace Istiqbal.Application.Featuers.Reservations.Commands.CreateReservation
                 .NotEmpty().WithMessage("RoomId cannot be empty.");
 
             RuleFor(x => x.CheckInDate)
-                .NotEmpty().WithMessage("Check-in date is required.")
-                .Must(date => date >= DateTimeOffset.Now).WithMessage("Check-in date cannot be in the past.");
+                .NotEmpty().WithMessage("Check-in date is required.");
 
             RuleFor(x => x.CheckOutDate)
-                .NotEmpty().WithMessage("Check-out date is required.")
-                .GreaterThan(x => x.CheckInDate).WithMessage("Check-out date must be after check-in date.");
+                .NotEmpty().WithMessage("Check-out date is required.");
         }
     }
 }

@@ -60,5 +60,12 @@ namespace Istiqbal.Domain.Guestes.Reservations
         public static readonly Error CancellationTooLate = Error.Conflict(
             code: "Reservation.CancellationTooLate",
             description: "Cannot cancel reservation within 24 hours of check-in date");
+        public static Error RoomNotAvailable => Error.Conflict(
+            code: "Reservation.RoomNotAvailable",
+            description: "The selected room is not available for the requested dates.");
+
+        public static readonly Error CannotUpdateCompletedOrCancelledReservation = Error.Conflict(
+            code: "Reservation.CannotUpdateCompletedOrCancelled",
+            description: "Cannot update a completed or cancelled reservation");
     }
 }

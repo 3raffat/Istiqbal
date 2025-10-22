@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Istiqbal.Contracts.Requests.Reservation.CreateReservationRequest;
 
 namespace Istiqbal.Application.Featuers.Reservations.Commands.CreateReservation
 {
@@ -24,7 +25,15 @@ namespace Istiqbal.Application.Featuers.Reservations.Commands.CreateReservation
     {
         public async Task<Result<ReservationDto>> Handle(CreateReservationCommand request, CancellationToken cancellationToken)
         {
-           var guestExists= await _context.Guests.AnyAsync(x=>x.Id==request.GuestId && !x.IsDeleted,cancellationToken);
+
+            if (request.CheckOutDate <= request.CheckInDate)
+            {
+                _logger.LogWarning("Invalid reservation dates: Check-out {CheckOutDate} must be after check-in {CheckInDate}.", request.CheckOutDate, request.CheckInDate);
+
+                return ReservationErrors.ReservationCheckOutDateInvalid;
+            }
+
+            var guestExists = await _context.Guests.AnyAsync(x=>x.Id==request.GuestId && !x.IsDeleted,cancellationToken);
 
             if(!guestExists)
             {
@@ -42,14 +51,23 @@ namespace Istiqbal.Application.Featuers.Reservations.Commands.CreateReservation
                 return RoomErrors.RoomNotFound;
             }
 
-            if (request.CheckOutDate.Date <= request.CheckInDate.Date)
+         
+            var hasConflict = await _context.Reservations.AnyAsync(x => x.RoomId == request.RoomId
+                    && x.CheckInDate < request.CheckOutDate
+                    && x.CheckOutDate > request.CheckInDate
+                    && x.Status != ReservationStatus.Cancelled,cancellationToken);
+
+            if (hasConflict)
             {
-                _logger.LogWarning("Invalid reservation dates: Check-out {CheckOutDate} must be after check-in {CheckInDate}.", request.CheckOutDate, request.CheckInDate);
+                _logger.LogWarning(
+                    "Room {RoomId} is not available for the requested dates: {CheckInDate} to {CheckOutDate}.",
+                    request.RoomId,
+                    request.CheckInDate,
+                    request.CheckOutDate);
 
-                return ReservationErrors.ReservationCheckOutDateInvalid;
+                return ReservationErrors.RoomNotAvailable;
             }
-
-            var numberOfDays = (request.CheckOutDate - request.CheckInDate).Days;
+            var numberOfDays = (request.CheckOutDate.ToDateTime(TimeOnly.MinValue) - request.CheckInDate.ToDateTime(TimeOnly.MinValue)).Days;
 
             var pricePerNight = room.Type.PricePerNight;
 

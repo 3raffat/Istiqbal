@@ -14,13 +14,13 @@ namespace Istiqbal.Domain.Guestes.Reservations
         public Guest Guest { get; set; } = null!;
         public Guid RoomId { get; set; }
         public Room Room { get; set; } = null!;
-        public DateTimeOffset CheckInDate { get; set; }
-        public DateTimeOffset CheckOutDate { get; set; }
+        public DateOnly CheckInDate { get; set; }
+        public DateOnly CheckOutDate { get; set; }
         public decimal Amount { get; private set; }
         public ReservationStatus Status { get; set; } = ReservationStatus.Confirmed;
         public Payment Payment { get; set; }
         private Reservation() { }
-        private Reservation(Guid id, Guid guestId, Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate, int numberOfDays, decimal pricePerNight) : base(id)
+        private Reservation(Guid id, Guid guestId, Guid roomId, DateOnly checkInDate, DateOnly checkOutDate, int numberOfDays, decimal pricePerNight) : base(id)
         {
             GuestId = guestId;
             RoomId = roomId;
@@ -29,8 +29,10 @@ namespace Istiqbal.Domain.Guestes.Reservations
             Amount = numberOfDays * pricePerNight ;
 
         }
-        public static Result<Reservation> Create(Guid id, Guid guestId, Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate, int numberOfDays,  decimal pricePerNight)
+        public static Result<Reservation> Create(Guid id, Guid guestId, Guid roomId, DateOnly checkInDate, DateOnly checkOutDate, int numberOfDays,  decimal pricePerNight)
         {
+            var today = DateOnly.FromDateTime(DateTime.Now);
+
             if (id == Guid.Empty)
                 return ReservationErrors.ReservationIdRequired;
 
@@ -40,20 +42,22 @@ namespace Istiqbal.Domain.Guestes.Reservations
             if (roomId == Guid.Empty)
                 return ReservationErrors.ReservationRoomIdRequired;
 
-            if (checkInDate < DateTimeOffset.UtcNow.Date)
+            if (checkInDate < today)
                 return ReservationErrors.ReservationCheckInDateInvalid;
 
-            if (checkOutDate.UtcDateTime.Date < checkInDate.UtcDateTime.Date)
+            if (checkOutDate <= checkInDate)
                 return ReservationErrors.ReservationCheckOutDateInvalid;
 
             return new Reservation(id, guestId, roomId, checkInDate, checkOutDate, numberOfDays,pricePerNight);
         }
-        public Result<Updated> Update(DateTimeOffset checkInDate, DateTimeOffset checkOutDate, Guid roomId, ReservationStatus status)
+        public Result<Updated> Update(DateOnly checkInDate, DateOnly checkOutDate, Guid roomId, ReservationStatus status)
         {
-            if (checkInDate.Date < DateTimeOffset.UtcNow.Date)
+            var today = DateOnly.FromDateTime(DateTime.Now);
+
+            if (checkInDate < today)
                 return ReservationErrors.ReservationCheckInDateInvalid;
 
-            if (checkOutDate < checkInDate)
+            if (checkOutDate <= checkInDate)
                 return ReservationErrors.ReservationCheckOutDateInvalid;
 
             if (!Enum.IsDefined(status))

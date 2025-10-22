@@ -23,7 +23,6 @@ namespace Istiqbal.Api.Controllers
     public class RoomTypeController(ISender _sender) : ControllerBase
     {
         [HttpGet]
-        [Authorize(Roles = nameof(Role.Admin))]
         [EndpointName("GetRoomTypes")]
         [EndpointDescription("Retrieves a list of all room types with their details.")]
         [ProducesResponseType(typeof(StandardSuccessResponse<List<RoomTypeDto>>), StatusCodes.Status200OK)]

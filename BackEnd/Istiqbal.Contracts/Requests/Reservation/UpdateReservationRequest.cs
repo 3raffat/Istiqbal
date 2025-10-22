@@ -10,8 +10,8 @@ namespace Istiqbal.Contracts.Requests.Reservation
     public sealed class UpdateReservationRequest
     {
         public Guid RoomId { get; set; }
-        public DateTimeOffset CheckInDate { get; set; }
-        public DateTimeOffset CheckOutDate { get; set; }
+        public DateOnly CheckInDate { get; set; }
+        public DateOnly CheckOutDate { get; set; }
         public ReservationStatus Status { get; set; }
     }
 }

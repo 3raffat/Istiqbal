@@ -14,8 +14,8 @@ namespace Istiqbal.Application.Featuers.Reservations.Dtos
         string Roomtype ,
         int RoomNumber,
         decimal Amount,
-        DateTimeOffset CheckInDate,
-        DateTimeOffset CheckOutDate,
+        DateOnly CheckInDate,
+        DateOnly CheckOutDate,
         ReservationStatus Status);
    
 }
