@@ -73,7 +73,7 @@ namespace Istiqbal.Infrastructure
 
             services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
 
-            services.AddHostedService<BookingStatusUpdateService>();
+            services.AddHostedService<ReservationStatusUpdateService>();
 
             return services;
         }

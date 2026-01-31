@@ -14,16 +14,16 @@ namespace Istiqbal.Domain.Common.Results
     }
     public sealed class Result<TValue> : IResult<TValue>
     {
-        private readonly TValue? _value = default;
+        //private readonly TValue? _value = default;
 
-        private readonly List<Error>? _errors = null;
-        public bool IsSuccess { get; }
-        public bool IsError => !IsSuccess;
-        public List<Error> Errors => IsError ? _errors! : [];
+        //private readonly List<Error>? _errors = null;
+       // public bool IsSuccess { get; }
+       // public bool IsError => !IsSuccess;
+        //public List<Error> Errors => IsError ? _errors! : [];
 
-        public TValue Value => IsSuccess ? _value! : default!;
+        //public TValue Value => IsSuccess ? _value! : default!;
 
-        public Error TopError => (_errors?.Count > 0) ? _errors[0] : default;
+        //public Error TopError => (_errors?.Count > 0) ? _errors[0] : default;
         private Result(Error error)
         {
             _errors = [error];
